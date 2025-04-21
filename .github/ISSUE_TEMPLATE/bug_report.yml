@@ -17,20 +17,20 @@ body:
       label: 어떤 상황에서 발생한 버그인가요?
       description: 가능한 한 명확하게 작성해주세요.
       placeholder: |
-        - Given: (상황 설명)
-        - When: (행동 설명)
+        - Given: (상황 설명)  
+        - When: (행동 설명)  
         - Then: (문제 발생 설명)
 
   - type: textarea
     id: expected
     attributes:
       label: 예상 결과
-      description: 정상적인 작동 결과는 무엇인가요?
-      placeholder: 예: 로그인 성공 후 대시보드로 이동
+      description: 어떤 결과가 나와야 했는지 작성해주세요.
+      placeholder: 예: "정상적으로 로그인 되어야 했습니다."
 
   - type: textarea
     id: extra
     attributes:
       label: 추가 정보
-      description: 스크린샷, 콘솔 로그 등 추가 정보를 포함해주세요.
-      placeholder: 예: 콘솔에 에러가 보입니다.
+      description: 로그, 스크린샷, 관련 정보 등을 입력해주세요.
+      placeholder: 예: 콘솔 로그, 화면 캡처 등
