@@ -1,12 +1,26 @@
-name: Test Issue Template
-description: 이건 잘 떠야 해 제발...!
-title: "[Test]"
-labels: []
-
+name: "🐞 Bug"
+description: "버그 발생 시 사용"
+labels: ["🐞 Bug"]
+title: " [BUG] "
 body:
   - type: textarea
-    id: what-happened
     attributes:
-      label: 무슨 일이 있었나요?
-      description: 간단히 서술해주세요
-      placeholder: 예: 앱이 크래시났어요
+      label: 📄 설명
+      description: 발생한 버그에 대한 설명을 작성해 주세요.
+      placeholder: |
+        - Given: (상황 설명)
+        - When: (행동 설명)
+        - Then: (문제 발생 설명)
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🎯 예상 결과
+      description: 어떤 결과가 나와야 했는지 작성해주세요.
+      placeholder: 예: 정상적으로 로그인 되어야 했습니다.
+  - type: textarea
+    attributes:
+      label: ℹ️ 추가 정보
+      description: 로그, 스크린샷, 관련 정보 등을 입력해주세요.
+      placeholder: 예: 콘솔 로그, 화면 캡처 등
+
