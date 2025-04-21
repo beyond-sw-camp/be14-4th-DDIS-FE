@@ -41,7 +41,7 @@ body:
     attributes:
       label: 📂 관련 파일 / 테스트 코드 위치
       description: 테스트 코드가 작성될 파일 경로 또는 위치를 명시해 주세요.
-      placeholder: 예: /tests/Login.test.tsx
+      placeholder: ex. /tests/Login.test.tsx
   - type: textarea
     attributes:
       label: 📝 참고 사항
