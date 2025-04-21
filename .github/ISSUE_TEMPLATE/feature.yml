@@ -13,7 +13,7 @@ body:
     attributes:
       label: ✅ 작업할 내용
       description: 할 일을 체크박스 형태로 작성해주세요.
-      placeholder: placeholder: |
+      placeholder: |
         - [ ] 기능 A 설계
         - [ ] 기능 B 개발
         - [ ] 기능 C 테스트
