@@ -9,7 +9,6 @@ body:
     attributes:
       value: |
         # 🐞 어떤 버그인가요?
-
         어떤 버그인지 간결하게 설명해주세요.
 
   - type: textarea
@@ -34,4 +33,4 @@ body:
     attributes:
       label: 추가 정보
       description: 로그, 스크린샷, 기타 유용한 정보를 입력해주세요.
-      placeholder: (예: 콘솔 로그, 네트워크 에러, 화면 캡처 등)
+      placeholder: 예: 콘솔 로그, 화면 캡처 등
