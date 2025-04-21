@@ -19,11 +19,6 @@ body:
       placeholder: ex. A 모듈과 B 모듈의 의존성을 분리합니다.
     validations:
       required: true
-  - type: textarea
-    attributes:
-      label: 🔍 기대 효과
-      description: 리팩토링 후 기대되는 개선점을 작성해 주세요.
-      placeholder: ex. 유지보수 용이성 증가
   - type: checkboxes
     attributes:
       label: ✅ 체크리스트
