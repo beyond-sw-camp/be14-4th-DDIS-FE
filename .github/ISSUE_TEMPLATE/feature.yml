@@ -20,7 +20,7 @@ body:
         - [ ] 기능 C 테스트
     validations:
       required: true
- - type: textarea
+  - type: textarea
     attributes:
       label: 📝 참고 사항
       description: 추가적으로 공유하거나 논의하고 싶은 내용을 작성해 주세요.
