@@ -2,6 +2,8 @@ name: Bug Report Template
 description: 혼자 해결하기 어려운 버그가 발생하였을 때 사용해주세요!
 title: "[Bug]: "
 labels: ["Bug"]
+assignees: []
+
 body:
   - type: markdown
     attributes:
