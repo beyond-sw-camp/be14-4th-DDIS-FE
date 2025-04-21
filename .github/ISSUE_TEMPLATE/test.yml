@@ -16,18 +16,15 @@ body:
   - type: textarea
     attributes:
       label: 🔍 테스트 시나리오
-      description: 테스트 항목과 기대 결과를 작성해 주세요.
-      placeholder: |
-        1. [기능/컴포넌트명]
-           - [ ] 입력값 A를 제공했을 때 결과 B 확인
-           - [ ] 경계값 테스트 (최소값/최대값)
-           - [ ] 예외 처리 테스트
-        2. [API 테스트]
-           - [ ] 정상 요청 → 200 OK
-           - [ ] 잘못된 요청 → 에러 코드 반환
-        3. [UI 테스트]
-           - [ ] 버튼 클릭 → 올바른 동작 수행
-           - [ ] 화면 요소 정상 렌더링
+      description: 테스트 항목과 기대 결과를 선택해주세요.
+      options:
+        - label: [기능/컴포넌트] 입력값 A → 결과 B 확인
+        - label: [기능/컴포넌트] 경계값 테스트 (최소값/최대값)
+        - label: [기능/컴포넌트] 예외 처리 테스트
+        - label: [API 테스트] 정상 요청 → 200 OK
+        - label: [API 테스트] 잘못된 요청 → 에러 코드 반환
+        - label: [UI 테스트] 버튼 클릭 → 올바른 동작 수행
+        - label: [UI 테스트] 화면 요소 정상 렌더링
   - type: checkboxes
     attributes:
       label: ✅ 체크리스트
