@@ -1,0 +1,36 @@
+name: Bug Report
+description: 혼자 해결하기 어려운 버그가 발생하였을 때 사용해주세요!
+title: "[Bug]: "
+labels: ["bug"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐞 어떤 버그인가요?
+        어떤 버그인지 간결하게 설명해주세요.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 어떤 상황에서 발생한 버그인가요?
+      description: 가능한 한 명확하게 작성해주세요.
+      placeholder: |
+        - Given: (상황 설명)
+        - When: (행동 설명)
+        - Then: (문제 발생 설명)
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 예상 결과
+      description: 어떤 결과가 나와야 했는지 작성해주세요.
+      placeholder: 예: 정상적으로 로그인 되어야 했습니다.
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 추가 정보
+      description: 로그, 스크린샷, 관련 정보 등을 입력해주세요.
+      placeholder: 예: 콘솔 로그, 화면 캡처 등
