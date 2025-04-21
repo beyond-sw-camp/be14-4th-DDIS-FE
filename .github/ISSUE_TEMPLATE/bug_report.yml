@@ -1,4 +1,4 @@
-name: Bug Report Template
+name: Bug Report
 description: 혼자 해결하기 어려운 버그가 발생하였을 때 사용해주세요!
 title: "[Bug]: "
 labels: ["bug"]
@@ -17,8 +17,8 @@ body:
       label: 어떤 상황에서 발생한 버그인가요?
       description: 가능한 한 명확하게 작성해주세요.
       placeholder: |
-        - Given: (상황 설명)  
-        - When: (행동 설명)  
+        - Given: (상황 설명)
+        - When: (행동 설명)
         - Then: (문제 발생 설명)
 
   - type: textarea
