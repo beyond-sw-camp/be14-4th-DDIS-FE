@@ -17,10 +17,10 @@ body:
     attributes:
       label: 🎯 예상 결과
       description: 어떤 결과가 나와야 했는지 작성해주세요.
-      placeholder: 예: 정상적으로 로그인 되어야 했습니다.
+      placeholder: ex. 정상적으로 로그인 되어야 했습니다.
   - type: textarea
     attributes:
       label: ℹ️ 추가 정보
       description: 로그, 스크린샷, 관련 정보 등을 입력해주세요.
-      placeholder: 예: 콘솔 로그, 화면 캡처 등
+      placeholder: ex. 콘솔 로그, 화면 캡처 등
 
