@@ -1,21 +1,21 @@
 name: Bug Report Template
 description: 혼자 해결하기 어려운 버그가 발생하였을 때 사용해주세요!
 title: "[Bug]: "
-labels: ["Bug"]
+labels: ["bug"]
 assignees: []
 
 body:
   - type: markdown
     attributes:
       value: |
-        # 🐞 어떤 버그인가요?
+        ## 🐞 어떤 버그인가요?
         어떤 버그인지 간결하게 설명해주세요.
 
   - type: textarea
     id: context
     attributes:
       label: 어떤 상황에서 발생한 버그인가요?
-      description: 가능하면 Given-When-Then 형식으로 작성해주세요.
+      description: 가능한 한 명확하게 작성해주세요.
       placeholder: |
         - Given: (상황 설명)
         - When: (행동 설명)
@@ -25,12 +25,12 @@ body:
     id: expected
     attributes:
       label: 예상 결과
-      description: 예상했던 정상적인 결과는 무엇인가요?
-      placeholder: 정상적으로 작동했을 경우 어떤 결과가 나와야 했나요?
+      description: 정상적인 작동 결과는 무엇인가요?
+      placeholder: 예: 로그인 성공 후 대시보드로 이동
 
   - type: textarea
     id: extra
     attributes:
       label: 추가 정보
-      description: 로그, 스크린샷, 기타 유용한 정보를 입력해주세요.
-      placeholder: 예: 콘솔 로그, 화면 캡처 등
+      description: 스크린샷, 콘솔 로그 등 추가 정보를 포함해주세요.
+      placeholder: 예: 콘솔에 에러가 보입니다.
