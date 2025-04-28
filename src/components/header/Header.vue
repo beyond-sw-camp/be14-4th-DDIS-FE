@@ -6,7 +6,7 @@
             <div class="inner-header">
                 <!-- 좌측 로고 -->
                 <div class="header-left">
-                    <img src="@/assets/images/logo.png" alt="로고" class="logo-img" />
+                    <img src="/images/logo.png" alt="로고" class="logo-img" />
                 </div>
                 <!-- 중앙 메뉴 -->
                 <nav class="header-menu">
@@ -21,22 +21,22 @@
                 <!-- 우측 DM/닉네임/프로필 -->
                 <div class="header-right">
                     <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
-                    <span class="profile-nickname">삥삥이</span>
-                    <img
-                    src="@/assets/images/header-profile.png"
-                    alt="프로필"
-                    class="profile-img"
-                    @click.stop="toggleProfileModal"/>
+                    <span class="profile-nickname">{{ profile.nickname }}</span>
+                        <img
+                            :src="profile.image"
+                            alt="프로필"
+                            class="profile-img"
+                            @click.stop="toggleProfileModal"/>
                     <!-- 프로필 모달 드롭다운 -->
                     <div
                         v-if="showProfileModal"
                         class="profile-modal"
                         @click.stop>
                         <div class="profile-modal-header">
-                            <img src="@/assets/images/header-profile.png" alt="프로필" class="modal-profile-img" />
+                            <img :src="profile.image" alt="프로필" class="modal-profile-img" />
                             <div class="modal-info">
-                                <div class="modal-nickname">삥삥이</div>
-                                <div class="modal-email">D1112@mail.com</div>
+                                <div class="modal-nickname">{{ profile.nickname }}</div>
+                                <div class="modal-email">{{ profile.email }}</div>
                             </div>
                         </div>
                         <div class="profile-modal-menu">
@@ -79,6 +79,18 @@
 
 <script setup>
     import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+    const profile = ref({
+        nickname: '',
+        email: '',
+        image: ''
+    })
+
+    onMounted(async () => {
+        const res = await fetch('http://localhost:3001/profile')
+        const data = await res.json()
+        profile.value = data
+    })
 
     const showProfileModal = ref(false)
 
