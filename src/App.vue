@@ -1,11 +1,11 @@
 <template>
   <div>
-    <Mypage/>
+    <RouterView/>
   </div>
 </template>
 
 <script setup>
-  import Mypage from '@/pages/Mypage.vue'
+  import { RouterView } from 'vue-router';
 </script>
 
 <style scoped>
