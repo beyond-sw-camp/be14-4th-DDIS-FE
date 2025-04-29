@@ -70,11 +70,15 @@
 
 <style scoped>
     .calendar-wrapper {
-        width: 840px;
-        margin: 0 auto;
-        padding: 48px;
+        width: 720px; 
+        padding: 32px;
         border: 1px solid #CDCDCD;
         border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
     }
     :deep(.custom-calendar .vc-weeks) {
         min-height: unset !important;
@@ -94,18 +98,14 @@
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        width: 87px;
-        height: 112px;
-        margin: auto;
-        margin-top: 5.5px;
-        margin-bottom: 5.5px;
-        margin-left: 13.5px;
-        margin-right: 13.5px;
+        width: 87px;  
+        height: 112px;  
+        margin: 4px;   
         position: relative;
     }
     .stone-svg {
-        width: 73px;
-        height: 70px;
+        width: 73px;  
+        height: 70px;  
         margin-bottom: 2px;
     }
     .date-text {
