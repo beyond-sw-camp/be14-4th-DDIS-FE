@@ -18,19 +18,19 @@
       </div>
   
       <!-- 선택된 방 상세 페이지 -->
-      <ShareRoomPage v-if="selectedRoom" :room="selectedRoom" />
+      <ShareRoomPage v-if="selectedRoom" :room="selectedRoom" :clientNum="clientNum" />
     </div>
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue'
+  import { ref, onMounted, reactive } from 'vue'
   import ShareRoomPage from '@/pages/ShareRoomPage.vue'
   
   const rooms = ref([])
   const selectedRoom = ref(null)
+  const clientNum = 8
   
   onMounted(async () => {
-    const clientNum = 9 // 실제 로그인 유저 ID로 교체
     try {
       const res = await fetch(`http://localhost:8080/room/member/${clientNum}`)
       rooms.value = await res.json()

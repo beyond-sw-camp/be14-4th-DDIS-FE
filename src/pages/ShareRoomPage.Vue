@@ -1,6 +1,5 @@
 <template>
   <div class="page-wrapper">
-    <!-- 좌측 사이드바 -->
     <div class="left-sidebar">
       <RoomLeftSideBar
         :title="room.title"
@@ -8,12 +7,14 @@
       />
     </div>
 
-    <!-- 중앙 달력 -->
     <div class="calendar-center">
-      <Calendar />
+      <Calendar
+        :roomNum="room.roomNum"
+        :clientNum="clientNum"
+        @update-todo-approve="updateTodoApprove"
+      />
     </div>
 
-    <!-- 우측 사이드바 -->
     <div class="right-sidebar">
       <RoomRightSideBar
         :todoList="todoList"
@@ -33,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import Calendar from '@/components/calendar/Calendar.vue'
 import RoomLeftSideBar from '@/components/sidebar/RoomLeftSideBar.vue'
 import RoomRightSideBar from '@/components/sidebar/RoomRightSideBar.vue'
@@ -43,6 +44,10 @@ const props = defineProps({
   room: {
     type: Object,
     required: true
+  },
+  clientNum: {
+    type: Number,
+    required: true
   }
 })
 
@@ -50,23 +55,19 @@ const showModal = ref(false)
 const todoList = ref([])
 const approveList = ref([])
 
-// ✅ room이 들어올 때마다 fetch 실행
-watch(
-  () => props.room,
-  async (room) => {
-    if (!room || !room.roomNum) return
+onMounted(async () => {
+  try {
+    const res = await fetch(`http://localhost:8080/room/${props.room.roomNum}/data`)
+    if (!res.ok) throw new Error('방 초기 데이터 불러오기 실패')
 
-    try {
-      const res = await fetch(`http://localhost:8080/room/${room.roomNum}/data`)
-      const data = await res.json()
-      todoList.value = data.todoList
-      approveList.value = data.approveList
-    } catch (err) {
-      console.error('room 데이터 fetch 실패:', err)
-    }
-  },
-  { immediate: true }
-)
+    const data = await res.json()
+
+    todoList.value = data.todoList
+    approveList.value = data.approveList
+  } catch (err) {
+    console.error('초기 데이터 로딩 실패:', err)
+  }
+})
 
 function openModal() {
   showModal.value = true
@@ -79,7 +80,15 @@ function closeModal() {
 function removeApprove(id) {
   approveList.value = approveList.value.filter(approve => approve.id !== id)
 }
+
+// ✅ 여기 추가!
+function updateTodoApprove({ todoList: newTodos, approveList: newApproves }) {
+  todoList.value = newTodos
+  approveList.value = newApproves
+}
 </script>
+
+
 
 <style scoped>
 .page-wrapper {

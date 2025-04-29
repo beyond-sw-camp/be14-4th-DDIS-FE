@@ -6,32 +6,32 @@
 
     <!-- 공유 TODO 리스트 -->
     <draggable
-      v-model="props.todoList"
-      tag="ul"
-      handle=".drag-handle"
-      animation="200"
-      class="todo-list"
-      item-key="shareTodoNum"
-    >
-      <template #item="{ element }">
-        <li>
-          <span class="drag-handle">⠿</span> {{ element.shareTodoName }}
-        </li>
-      </template>
-    </draggable>
+  :list="todoList"
+  tag="ul"
+  handle=".drag-handle"
+  animation="200"
+  class="todo-list"
+  item-key="shareTodoNum"
+>
+  <template #item="{ element }">
+    <li>
+      <span class="drag-handle">⠿</span> {{ element.shareTodoName }}
+    </li>
+  </template>
+</draggable>
+
 
     <button class="approve-button" @click="openModal">
       ✔️ Approve
     </button>
 
-    <!-- Approve 요청 박스 목록 -->
     <div class="approve-list">
-      <div v-for="approve in props.approveList" :key="approve.id" class="approve-box">
+      <div v-for="approve in approveList" :key="approve.id" class="approve-box">
         <p class="approve-title">요청: {{ approve.title }}</p>
         <p class="approve-content">{{ approve.content }}</p>
         <div class="approve-actions">
           <button class="approve-yes" @click="approveItem(approve.id)">✔️</button>
-          <button class="approve-no" @click="reject(approve.id)">❌</button>
+          <button class="approve-no" @click="rejectItem(approve.id)">❌</button>
         </div>
       </div>
     </div>
@@ -60,12 +60,10 @@ function openModal() {
 }
 
 function approveItem(id) {
-  console.log(`ID ${id} 승인 완료`)
   emit('approve-success', id)
 }
 
-function reject(id) {
-  console.log(`ID ${id} 거절 완료`)
+function rejectItem(id) {
   emit('approve-reject', id)
 }
 </script>
