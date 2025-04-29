@@ -45,6 +45,10 @@
                                 <span>개인정보 수정</span>
                             </div>
                             <div class="profile-modal-item">
+                                <img src="@/assets/icons/report-icon.svg" alt="신고관리리" class="modal-icon">
+                                <span>신고 관리</span>
+                            </div>
+                            <div class="profile-modal-item">
                                 <img src="@/assets/icons/profile-logout.svg" alt="로그아웃" class="modal-icon">
                                 <span>로그아웃</span>
                             </div>
@@ -87,7 +91,7 @@
     })
 
     onMounted(async () => {
-        const res = await fetch('http://localhost:3001/profile/2')
+        const res = await fetch('http://localhost:3001/profiles/1')
         const data = await res.json()
         profile.value = data
     })
