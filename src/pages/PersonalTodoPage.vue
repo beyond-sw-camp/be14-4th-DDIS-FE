@@ -1,7 +1,4 @@
 <template>
-    <header>
-      <Header />
-    </header>
     <div class="container">
       <div class="side-profile">
         <img src="@/assets/images/header-profile.png" alt="프로필" class="profile-img" />
