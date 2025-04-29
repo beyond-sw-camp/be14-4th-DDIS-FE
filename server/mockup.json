@@ -1,20 +1,201 @@
 {
-    "profiles": [
-        {    
-            "id": 1,
-            "nickname": "관리자",
-            "email": "help@tododdudo.com",
-            "image": "/images/admin-profile.png"
+  "profiles": [
+      {    
+          "id": 1,
+          "nickname": "관리자",
+          "email": "help@tododdudo.com",
+          "image": "/images/admin-profile.png"
+      },
+      {
+          "id": 2,
+          "nickname": "삥삥이",
+          "email": "bbing@mail.com",
+          "image": "/images/header-profile.png"
+      }
+  ],
+  "reports": [
+      {
+          "id": 9,
+          "type": "게시글",
+          "date": "2025-04-23",
+          "reporter": "삥삥이",
+          "content": "상업적/홍보성",
+          "status": "처리중",
+          "isProcessed": true,
+          "isApproved": false
         },
         {
-            "id": 2,
-            "nickname": "삥삥이",
-            "email": "bbing@mail.com",
-            "image": "/images/header-profile.png"
+          "id": 8,
+          "type": "회원",
+          "date": "2025-04-22",
+          "reporter": "도고미",
+          "content": "욕설/인신공격",
+          "status": "처리중",
+          "isProcessed": true,
+          "isApproved": false
+        },
+        {
+          "id": 7,
+          "type": "게시글",
+          "date": "2025-04-21",
+          "reporter": "하비루",
+          "content": "음란/선정성",
+          "status": "처리중",
+          "isProcessed": true,
+          "isApproved": false
+        },
+        {
+          "id": 6,
+          "type": "게시글",
+          "date": "2025-04-20",
+          "reporter": "제리",
+          "content": "개인정보노출",
+          "status": "처리중",
+          "isProcessed": true,
+          "isApproved": false
+        },
+        {
+          "id": 5,
+          "type": "회원",
+          "date": "2025-04-19",
+          "reporter": "랑랑쓰",
+          "content": "부적절한 닉네임",
+          "status": "처리중",
+          "isProcessed": true,
+          "isApproved": false
+        },
+        {
+          "id": 4,
+          "type": "회원",
+          "date": "2025-04-18",
+          "reporter": "로지",
+          "content": "욕설/인신공격",
+          "status": "처리중",
+          "isProcessed": true,
+          "isApproved": false
+        },
+        {
+          "id": 3,
+          "type": "게시글",
+          "date": "2025-04-17",
+          "reporter": "토미",
+          "content": "불법정보",
+          "status": "처리중",
+          "isProcessed": true,
+          "isApproved": false
+        },
+        {
+          "id": 2,
+          "type": "회원",
+          "date": "2025-04-16",
+          "reporter": "도리",
+          "content": "음란/선정성",
+          "status": "처리중",
+          "isProcessed": true,
+          "isApproved": false
+        },
+        {
+          "id": 1,
+          "type": "게시글",
+          "date": "2025-04-15",
+          "reporter": "삥삥이",
+          "content": "기타",
+          "status": "처리중",
+          "isProcessed": true,
+          "isApproved": false
         }
-    ],
+  ],
+  "todoList" : [
+    { "id": 1, "text": "아침 7시에 일어나기" },
+    { "id": 2, "text": "하루에 30분 자격증 공부하기" }
+  ],
+  "approveList" : [
+    { "id": 1, "requesterName": "CANDDY" },
+    { "id": 2, "requesterName": "OKKZZI" }
+  ],
+  "rooms": [
+    { "id": 1, "title": "공부습관방", "content": "공부습관을 만드는 사람들의 모임입니다." },
+    { "id": 2, "title": "아침형인간", "content": "매일 아침 일찍 일어나 도전하는 방입니다." },
+    { "id": 3, "title": "헬스메이트", "content": "운동 인증과 헬스 루틴을 함께 공유합니다." },
+    { "id": 4, "title": "다이어트파티", "content": "다이어트 식단과 운동을 서로 응원하는 방입니다." },
+    { "id": 5, "title": "하루만 공부해", "content": "하루만! 단 하루만 공부하기로 약속하는 방입니다." }
+  ],
+  "follows": [
+    {
+      "id": 1,
+      "nickname": "삥삥이",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 2,
+      "nickname": "팔로워2",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 3,
+      "nickname": "팔로워3",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 4,
+      "nickname": "팔로워4",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 5,
+      "nickname": "팔로워5",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 6,
+      "nickname": "팔로워6",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 7,
+      "nickname": "팔로워7",
+      "profile-img": "/images/header-profile.png"
+    }
+  ],
+  "followings": [
+    {
+      "id": 1,
+      "nickname": "삥삥이",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 2,
+      "nickname": "팔로잉2",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 3,
+      "nickname": "팔로잉3",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 4,
+      "nickname": "팔로잉4",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 5,
+      "nickname": "팔로잉5",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 6,
+      "nickname": "팔로잉6",
+      "profile-img": "/images/header-profile.png"
+    },
+    {
+      "id": 7,
+      "nickname": "팔로잉7",
+      "profile-img": "/images/header-profile.png"
+    }
+  ], 
 
-    "notices": [
+  "notices": [
         {
             "id": 1,
             "title": "유저 피드백 반영 안내",
@@ -198,5 +379,5 @@
       "date": "2025-04-23 14:30:00",
       "content": "앱을 재설치 후 다시 로그인 시도해보세요."
     }
-  ]
+  ]  
 }

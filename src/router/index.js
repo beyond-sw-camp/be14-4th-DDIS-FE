@@ -21,6 +21,10 @@ const router = createRouter({
         },
     
         {
+            path: '/sharetodopage',
+            component: () => import('@/pages/ShareRoomPage.vue')
+        },
+        {
             path: '/login',
             component: () => import('@/pages/LoginPage.vue')
         },
@@ -32,7 +36,10 @@ const router = createRouter({
             path: '/inquiry/:id',
             component: () => import('@/components/inquiry/InquiryDetailPage.vue')
         },   
-        
+        {
+            path: '/room',
+            component: () => import('@/pages/RoomListPage.vue')
+        }
     ]
 })
 
