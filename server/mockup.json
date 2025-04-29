@@ -1,8 +1,16 @@
 {
-    "profile": {
-        "id": 1,
-        "nickname": "삥삥이",
-        "email": "bbing@mail.com",
-        "image": "/images/header-profile.png"
-    }
+    "profiles": [
+        {    
+            "id": 1,
+            "nickname": "관리자",
+            "email": "help@tododdudo.com",
+            "image": "/images/admin-profile.png"
+        },
+        {
+            "id": 2,
+            "nickname": "삥삥이",
+            "email": "bbing@mail.com",
+            "image": "/images/header-profile.png"
+        }
+    ]
 }
