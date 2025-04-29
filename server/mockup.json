@@ -113,14 +113,87 @@
       { "id": 1, "requesterName": "CANDDY" },
       { "id": 2, "requesterName": "OKKZZI" }
     ],
-    
-      "rooms": [
-        { "id": 1, "title": "공부습관방", "content": "공부습관을 만드는 사람들의 모임입니다." },
-        { "id": 2, "title": "아침형인간", "content": "매일 아침 일찍 일어나 도전하는 방입니다." },
-        { "id": 3, "title": "헬스메이트", "content": "운동 인증과 헬스 루틴을 함께 공유합니다." },
-        { "id": 4, "title": "다이어트파티", "content": "다이어트 식단과 운동을 서로 응원하는 방입니다." },
-        { "id": 5, "title": "하루만 공부해", "content": "하루만! 단 하루만 공부하기로 약속하는 방입니다." }
-      ]
+    "rooms": [
+      { "id": 1, "title": "공부습관방", "content": "공부습관을 만드는 사람들의 모임입니다." },
+      { "id": 2, "title": "아침형인간", "content": "매일 아침 일찍 일어나 도전하는 방입니다." },
+      { "id": 3, "title": "헬스메이트", "content": "운동 인증과 헬스 루틴을 함께 공유합니다." },
+      { "id": 4, "title": "다이어트파티", "content": "다이어트 식단과 운동을 서로 응원하는 방입니다." },
+      { "id": 5, "title": "하루만 공부해", "content": "하루만! 단 하루만 공부하기로 약속하는 방입니다." }
+    ],
+    "follows": [
+      {
+        "id": 1,
+        "nickname": "삥삥이",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 2,
+        "nickname": "팔로워2",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 3,
+        "nickname": "팔로워3",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 4,
+        "nickname": "팔로워4",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 5,
+        "nickname": "팔로워5",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 6,
+        "nickname": "팔로워6",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 7,
+        "nickname": "팔로워7",
+        "profile-img": "/images/header-profile.png"
+      }
+    ],
+    "followings": [
+      {
+        "id": 1,
+        "nickname": "삥삥이",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 2,
+        "nickname": "팔로잉2",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 3,
+        "nickname": "팔로잉3",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 4,
+        "nickname": "팔로잉4",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 5,
+        "nickname": "팔로잉5",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 6,
+        "nickname": "팔로잉6",
+        "profile-img": "/images/header-profile.png"
+      },
+      {
+        "id": 7,
+        "nickname": "팔로잉7",
+        "profile-img": "/images/header-profile.png"
+      }
+    ]
     
     
 }
