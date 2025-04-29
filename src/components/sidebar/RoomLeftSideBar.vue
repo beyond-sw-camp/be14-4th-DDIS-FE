@@ -10,10 +10,10 @@
     </div>
 
     <!-- 공동TODO방 제목 -->
-    <h2 class="room-title">공동TODO방 제목</h2>
+    <h2 class="room-title">{{ title }}</h2>
 
     <!-- 공동TODO방 내용 -->
-    <p class="room-content">공동TODO방 내용</p>
+    <p class="room-content">{{ content }}</p>
 
     <!-- 구분선 -->
     <div class="divider"></div>
@@ -29,15 +29,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import SummaryGraph from '@/components/graph/SummaryGraph.vue'
 
-// 방장(owner) 정보
-const owner = ref({
-  id: 1,
-  name: '성준',  // 여기 이름은 동적으로 나중에 서버 데이터로 받을 수도 있음
-  profileImage: '/profile_owner.png' // 기본 프로필 이미지 경로
+const props = defineProps({
+  title: { type: String, required: true },
+  content: { type: String, required: true }
 })
+
+const owner = {
+  id: 1,
+  name: '성준',
+  profileImage: '/profile_owner.png'
+}
 </script>
 
 <style scoped>
@@ -48,7 +51,6 @@ const owner = ref({
   gap: 20px;
 }
 
-/* 방장 프로필 */
 .owner-info {
   display: flex;
   align-items: center;
@@ -80,10 +82,8 @@ const owner = ref({
   padding: 2px 6px;
   border-radius: 6px;
   margin-top: 4px;
-  display: inline-block;
 }
 
-/* 기존 스타일 그대로 유지 */
 .room-title {
   font-size: 24px;
   font-weight: 700;
@@ -97,6 +97,7 @@ const owner = ref({
 }
 
 .divider {
+  width: 100%;
   height: 1px;
   background-color: #aaa;
   margin-bottom: 24px;

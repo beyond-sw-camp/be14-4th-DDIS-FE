@@ -104,5 +104,23 @@
             "isProcessed": true,
             "isApproved": false
           }
-    ]
+    ],
+    "todoList" : [
+      { "id": 1, "text": "아침 7시에 일어나기" },
+      { "id": 2, "text": "하루에 30분 자격증 공부하기" }
+    ],
+    "approveList" : [
+      { "id": 1, "requesterName": "CANDDY" },
+      { "id": 2, "requesterName": "OKKZZI" }
+    ],
+    
+      "rooms": [
+        { "id": 1, "title": "공부습관방", "content": "공부습관을 만드는 사람들의 모임입니다." },
+        { "id": 2, "title": "아침형인간", "content": "매일 아침 일찍 일어나 도전하는 방입니다." },
+        { "id": 3, "title": "헬스메이트", "content": "운동 인증과 헬스 루틴을 함께 공유합니다." },
+        { "id": 4, "title": "다이어트파티", "content": "다이어트 식단과 운동을 서로 응원하는 방입니다." },
+        { "id": 5, "title": "하루만 공부해", "content": "하루만! 단 하루만 공부하기로 약속하는 방입니다." }
+      ]
+    
+    
 }
