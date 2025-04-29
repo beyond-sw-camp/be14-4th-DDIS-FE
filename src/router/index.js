@@ -10,7 +10,16 @@ const router = createRouter({
         {
             path: '/report',
             component: () => import('@/pages/ReportPage.vue')
-        }
+        },
+        { 
+            path: '/notice',
+            component: () => import('@/pages/notice/NoticePage.vue')
+        },
+        {
+            path: '/notice/:id',
+            component: () => import('@/pages/notice/NoticeDetailPage.vue')
+        },
+    
     ]
 })
 
