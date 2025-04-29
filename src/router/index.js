@@ -13,17 +13,26 @@ const router = createRouter({
         },
         { 
             path: '/notice',
-            component: () => import('@/pages/notice/NoticePage.vue')
+            component: () => import('@/pages/NoticePage.vue')
         },
         {
             path: '/notice/:id',
-            component: () => import('@/pages/notice/NoticeDetailPage.vue')
+            component: () => import('@/components/notice/NoticeDetailPage.vue')
         },
     
         {
             path: '/login',
             component: () => import('@/pages/LoginPage.vue')
-        }
+        },
+        { 
+            path: '/inquiry',
+            component: () => import('@/pages/InquiryPage.vue')
+        },
+        {
+            path: '/inquiry/:id',
+            component: () => import('@/components/inquiry/InquiryDetailPage.vue')
+        },   
+        
     ]
 })
 
