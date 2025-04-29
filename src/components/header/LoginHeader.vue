@@ -18,40 +18,9 @@
                         <span :class="{ hovered: activeMenu === menu.key }">{{ menu.label }}</span>
                     </div>
                 </nav>
-                <!-- 우측 DM/닉네임/프로필 -->
+                <!-- 우측 로그인 버튼 -->
                 <div class="header-right">
-                    <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
-                    <span class="profile-nickname">{{ profile.nickname }}</span>
-                        <img
-                            :src="profile.image"
-                            alt="프로필"
-                            class="profile-img"
-                            @click.stop="toggleProfileModal"/>
-                    <!-- 프로필 모달 드롭다운 -->
-                    <div
-                        v-if="showProfileModal"
-                        class="profile-modal"
-                        @click.stop>
-                        <div class="profile-modal-header">
-                            <img :src="profile.image" alt="프로필" class="modal-profile-img" />
-                            <div class="modal-info">
-                                <div class="modal-nickname">{{ profile.nickname }}</div>
-                                <div class="modal-email">{{ profile.email }}</div>
-                            </div>
-                        </div>
-                        <div class="profile-modal-menu">
-                            <div class="profile-modal-item">
-                                <img src="@/assets/icons/profile-setting.svg" alt="개인정보수정" class="modal-icon">
-                                <span>개인정보 수정</span>
-                            </div>
-                            <div class="profile-modal-item">
-                                <img src="@/assets/icons/profile-logout.svg" alt="로그아웃" class="modal-icon">
-                                <span>로그아웃</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 오버레이(모달 바깥 클릭 시 닫힘) -->
-                    <div v-if="showProfileModal" class="modal-overlay" @click="closeProfileModal"></div>
+                    <button class="login-button">로그인</button>
                 </div>
             </div>
             <!-- 메가 메뉴 전체 영역 (hover 시 슬라이드다운) -->
@@ -79,6 +48,9 @@
 
 <script setup>
     import { ref, onMounted, onBeforeUnmount } from 'vue'
+    import { useRouter } from 'vue-router'
+
+    const router = useRouter() 
 
     const profile = ref({
         nickname: '',
@@ -87,7 +59,7 @@
     })
 
     onMounted(async () => {
-        const res = await fetch('http://localhost:3001/profiles/2')
+        const res = await fetch('http://localhost:3001/profile')
         const data = await res.json()
         profile.value = data
     })
@@ -131,6 +103,10 @@
     }
     function hoverMega() {
     // noop: 래퍼에서 hover 유지용
+    }
+
+    function goToLogin() {
+        router.push('/login')
     }
 </script>
   
@@ -210,117 +186,22 @@
         min-width: 170px;
         justify-content: flex-end;
     }
-    .header-icon.dm {
-        width: 28px;
-        height: 28px;
-    }
-    .profile-nickname {
-        font-size: 15px;
+
+    .login-button {
+        background-color: #C7F6F1;
+        border: 1px solid #000000;
+        border-radius: 40px;
+        padding: 8px 16px;
+        font-size: 14px;
         font-weight: 600;
         color: #000000;
-        margin-right: 2px;
-    }
-    .profile-img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 1.5px solid #cdcdcd;
         cursor: pointer;
+        transition: background-color 0.2s, transform 0.2s;
     }
 
-    .profile-modal {
-        position: absolute;
-        top: 60px;
-        right: 0;
-        min-width: 260px;
-        background: #fff;
-        border-radius: 18px;
-        box-shadow: 0 2px 15px 0 rgba(0,0,0,0.15);
-        padding: 24px 0 18px 0;
-        z-index: 999;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        animation: modalDown 0.18s;
-    }
-
-    @keyframes modalDown {
-        from { opacity: 0; transform: translateY(-12px);}
-        to   { opacity: 1; transform: translateY(0);}
-    }
-
-    .profile-modal-header {
-        display: flex;
-        align-items: center;
-        padding: 0 24px 10px 24px;
-        border-bottom: 1px solid #f0f0f0;
-        margin-bottom: 12px;
-    }
-
-    .modal-profile-img {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-right: 13px;
-        border: 1px solid #ddd;
-    }
-
-    .modal-info {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .modal-nickname {
-        font-size: 17px;
-        font-weight: 700;
-        margin-bottom: 3px;
-        color: #222;
-    }
-
-    .modal-email {
-        font-size: 14px;
-        color: #888;
-        font-weight: 500;
-    }
-
-    /* 메뉴 리스트 */
-    .profile-modal-menu {
-        display: flex;
-        flex-direction: column;
-        gap: 11px;
-        margin-top: 6px;
-        padding: 0 24px;
-    }
-
-    .profile-modal-item {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        font-size: 16px;
-        color: #111;
-        cursor: pointer;
-        padding: 7px 0 4px 0;
-        transition: background 0.15s, color 0.15s;
-        border-radius: 8px;
-    }
-
-    .profile-modal-item:hover {
-        background: #f2f2f2;
-    }
-
-    .modal-icon {
-        font-size: 18px;
-    }
-
-    .modal-overlay {
-        /* 전체 화면 클릭시 닫힘 (투명) */
-        position: fixed;
-        left: 0; top: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 998;
+    .login-button:hover {
+        background-color: #c1eeee;
+        transform: scale(1.05);
     }
 
     /* 🟦 메가 메뉴 영역 전체 스타일 */

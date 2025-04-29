@@ -44,6 +44,10 @@
                                 <img src="@/assets/icons/profile-setting.svg" alt="개인정보수정" class="modal-icon">
                                 <span>개인정보 수정</span>
                             </div>
+                            <div class="profile-modal-item" @click="goToReportPage">
+                                <img src="@/assets/icons/report-icon.svg" alt="신고관리리" class="modal-icon">
+                                <span>신고 관리</span>
+                            </div>
                             <div class="profile-modal-item">
                                 <img src="@/assets/icons/profile-logout.svg" alt="로그아웃" class="modal-icon">
                                 <span>로그아웃</span>
@@ -79,6 +83,7 @@
 
 <script setup>
     import { ref, onMounted, onBeforeUnmount } from 'vue'
+    import { useRouter } from 'vue-router'
 
     const profile = ref({
         nickname: '',
@@ -87,7 +92,7 @@
     })
 
     onMounted(async () => {
-        const res = await fetch('http://localhost:3001/profiles/2')
+        const res = await fetch('http://localhost:3001/profiles/1')
         const data = await res.json()
         profile.value = data
     })
@@ -132,6 +137,13 @@
     function hoverMega() {
     // noop: 래퍼에서 hover 유지용
     }
+
+    const router = useRouter()
+
+    function goToReportPage() {
+        router.push('/report')
+    }
+
 </script>
   
 <style scoped>

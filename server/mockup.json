@@ -1,0 +1,108 @@
+{
+    "profiles": [
+        {    
+            "id": 1,
+            "nickname": "관리자",
+            "email": "help@tododdudo.com",
+            "image": "/images/admin-profile.png"
+        },
+        {
+            "id": 2,
+            "nickname": "삥삥이",
+            "email": "bbing@mail.com",
+            "image": "/images/header-profile.png"
+        }
+    ],
+    "reports": [
+        {
+            "id": 9,
+            "type": "게시글",
+            "date": "2025-04-23",
+            "reporter": "삥삥이",
+            "content": "상업적/홍보성",
+            "status": "처리중",
+            "isProcessed": true,
+            "isApproved": false
+          },
+          {
+            "id": 8,
+            "type": "회원",
+            "date": "2025-04-22",
+            "reporter": "도고미",
+            "content": "욕설/인신공격",
+            "status": "처리중",
+            "isProcessed": true,
+            "isApproved": false
+          },
+          {
+            "id": 7,
+            "type": "게시글",
+            "date": "2025-04-21",
+            "reporter": "하비루",
+            "content": "음란/선정성",
+            "status": "처리중",
+            "isProcessed": true,
+            "isApproved": false
+          },
+          {
+            "id": 6,
+            "type": "게시글",
+            "date": "2025-04-20",
+            "reporter": "제리",
+            "content": "개인정보노출",
+            "status": "처리중",
+            "isProcessed": true,
+            "isApproved": false
+          },
+          {
+            "id": 5,
+            "type": "회원",
+            "date": "2025-04-19",
+            "reporter": "랑랑쓰",
+            "content": "부적절한 닉네임",
+            "status": "처리중",
+            "isProcessed": true,
+            "isApproved": false
+          },
+          {
+            "id": 4,
+            "type": "회원",
+            "date": "2025-04-18",
+            "reporter": "로지",
+            "content": "욕설/인신공격",
+            "status": "처리중",
+            "isProcessed": true,
+            "isApproved": false
+          },
+          {
+            "id": 3,
+            "type": "게시글",
+            "date": "2025-04-17",
+            "reporter": "토미",
+            "content": "불법정보",
+            "status": "처리중",
+            "isProcessed": true,
+            "isApproved": false
+          },
+          {
+            "id": 2,
+            "type": "회원",
+            "date": "2025-04-16",
+            "reporter": "도리",
+            "content": "음란/선정성",
+            "status": "처리중",
+            "isProcessed": true,
+            "isApproved": false
+          },
+          {
+            "id": 1,
+            "type": "게시글",
+            "date": "2025-04-15",
+            "reporter": "삥삥이",
+            "content": "기타",
+            "status": "처리중",
+            "isProcessed": true,
+            "isApproved": false
+          }
+    ]
+}

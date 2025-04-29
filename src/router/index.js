@@ -14,6 +14,10 @@ const router = createRouter({
         {
             path: '/sharetodopage',
             component: () => import('@/pages/ShareRoomPage.vue')
+        },
+        {
+            path: '/login',
+            component: () => import('@/pages/LoginPage.vue')
         }
     ]
 })
