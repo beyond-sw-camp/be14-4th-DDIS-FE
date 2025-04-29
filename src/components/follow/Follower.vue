@@ -1,0 +1,76 @@
+<template>
+    <div class="overlay" @click.self="close">
+      <div class="follower-modal">
+        <h2 class="modal-title">팔로워</h2>
+        <div class="follower-list">
+          <FollowBox
+            v-for="f in followers"
+            :key="f.id"
+            :image="f['profile-img']"
+            :nickname="f.nickname"
+          />
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref, onMounted } from 'vue';
+  import FollowBox from './FollowBox.vue';
+  
+  const followers = ref([]);
+  
+  onMounted(async () => {
+    const res = await fetch('http://localhost:3001/follows');
+    const data = await res.json();
+    followers.value = data;
+  });
+  
+  const emit = defineEmits(['close']);
+  const close = () => emit('close');
+  </script>
+  
+  <style scoped>
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    padding-top: 80px;
+    z-index: 999;
+  }
+  
+  .follower-modal {
+    width: 547px;
+    height: 632px;
+    background: white;
+    border-radius: 20px;
+    padding: 30px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  .modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .follower-list {
+    overflow-y: auto;
+    width: 100%;
+    padding-left: 8px;
+    padding-right: 8px;
+    /* 스크롤바 숨기기 */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+  }
+  </style>
+  
