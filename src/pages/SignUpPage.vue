@@ -52,6 +52,10 @@
         </div>
         <input v-model="form.code" type="text" placeholder="인증번호를 입력하세요." />
         <p v-if="errors.code" class="error">{{ errors.code }}</p>
+
+        <button type="button" @click="verifyCode" class="verify-code-btn">
+        인증번호 확인
+        </button>
   
         <button type="submit" class="submit-btn">가입하기</button>
       </form>
@@ -138,29 +142,72 @@ export default {
     toggleConfirmPassword() {
       this.showConfirmPassword = !this.showConfirmPassword;
     },
-    handleSubmit() {
-      // 최종 검증 및 제출 처리
-      if (Object.values(this.errors).every(err => !err)) {
-        console.log('회원가입 가능:', this.form);
+    async handleSubmit() {
+  
+    // 유효성 체크 통과한 경우
+    const payload = {
+      clientName: this.form.name,
+      clientId: this.form.id,
+      clientPwd: this.form.password,
+      clientEmail: this.form.email,
+      clientBirth: this.form.birth,
+      clientNickname: this.form.nickname,
+      clientPhotoUrl: null,
+      clientType: "USER"
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/clients/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (result.message === "회원가입이 성공적으로 완료되었습니다.") {
+        alert("회원가입이 완료되었습니다.");
+        // 라우팅 처리 (예: 로그인 페이지로)
+        this.$router.push('/login');
       } else {
-        console.warn('유효하지 않은 입력:', this.errors);
+        alert(result.message); // 실패 시 백엔드에서 전달한 메시지 출력
       }
-    },
-    validateEmail() {
+    } catch (error) {
+      console.error('회원가입 요청 실패:', error);
+      alert("회원가입 중 오류가 발생했습니다.");
+    }
+  },
+
+  validateEmail() {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regex.test(this.form.email)) {
       this.errors.email = "사용할 수 없는 이메일입니다.";
     } else {
       this.errors.email = "";
     }
-    },
-    sendVerificationCode() {
-    if (!this.form.email || this.errors.email) return;
+  },
 
-    // 서버로 인증번호 요청 보내는 로직 (예: API 호출 등)
+  async sendVerificationCode() {
+  if (!this.form.email || this.errors.email) return;
+
+  try {
+    const response = await fetch("http://localhost:8080/email/send-code", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: this.form.email }),
+    });
+
+    if (!response.ok) {
+      throw new Error("인증번호 발송 실패");
+    }
 
     this.isCodeSent = true;
     this.timer = 300; // 5분
+
     if (this.timerInterval) clearInterval(this.timerInterval);
 
     this.timerInterval = setInterval(() => {
@@ -169,12 +216,45 @@ export default {
       } else {
         clearInterval(this.timerInterval);
         this.timerInterval = null;
-        this.isCodeSent = false; // 버튼 다시 활성화
+        this.isCodeSent = false;
       }
     }, 1000);
+
+    alert("인증번호가 이메일로 발송되었습니다.");
+    } catch (error) {
+    console.error(error);
+    alert("인증번호 발송 실패");
+    }
   },
+
+
+  async verifyCode() {
+  try {
+    const response = await fetch("http://localhost:8080/email/verify-code", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: this.form.email,
+        code: this.form.code,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("인증 실패");
+    }
+
+    const result = await response.text();
+        alert(result); // "인증 성공" or "인증 실패"
+      } catch (error) {
+        console.error(error);
+        alert("인증 요청 중 오류 발생");
+      }
+    }
   }
-};
+}
+
 </script>
   
   <style scoped>
@@ -254,5 +334,15 @@ export default {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+  }
+
+  .verify-code-btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  margin-top: 8px;
+  cursor: pointer;
   }
   </style>
