@@ -139,7 +139,7 @@
             '문의사항': '/inquiry',
             '채팅방': '/chat',
             // '모집 게시판': '/board',
-            // '개인 Todo': '/todo/personal',
+            '개인 Todo': '/todo/personal',
             // '공동 Todo': '/todo/shared',
         }
         return mapping[label] || '/' + label.toLowerCase()
