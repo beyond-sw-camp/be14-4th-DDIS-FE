@@ -14,6 +14,13 @@
         @update-todo-approve="updateTodoApprove"
         v-model:focusedDate="focusedDate"
       />
+
+      <!-- 👇 달력 아래에 완료 로그 타임라인 추가 -->
+      <DoneTimeLine
+        v-if="selectedDate"
+        :roomNum="room.roomNum"
+        :selectedDate="selectedDate"
+      />
     </div>
 
     <div class="right-sidebar">
@@ -21,6 +28,7 @@
         :todoList="todoList"
         :approveList="approveList"
         :memberNum="memberNum"
+        :roomNum="room.roomNum"
         @open-approve-modal="openModal"
         @approve-success="removeApprove"
         @approve-reject="removeApprove"
@@ -52,21 +60,17 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import dayjs from 'dayjs'
+
 import Calendar from '@/components/calendar/Calendar.vue'
+import DoneTimeLine from '@/components/timeline/DoneTimeLine.vue'
 import RoomLeftSideBar from '@/components/sidebar/RoomLeftSideBar.vue'
 import RoomRightSideBar from '@/components/sidebar/RoomRightSideBar.vue'
 import ApproveModal from '@/components/modal/ApproveModal.vue'
 import ShareTodoModal from '@/components/modal/ShareTodoModal.vue'
 
 const props = defineProps({
-  room: {
-    type: Object,
-    required: true
-  },
-  clientNum: {
-    type: Number,
-    required: true
-  }
+  room: Object,
+  clientNum: Number
 })
 
 const showModal = ref(false)
@@ -130,9 +134,7 @@ async function handleRefresh() {
 }
 
 function openModal(newTodos = null) {
-  if (newTodos) {
-    approveTodoList.value = newTodos || [...todoList.value]
-  }
+  approveTodoList.value = newTodos || [...todoList.value]
   showModal.value = true
 }
 
