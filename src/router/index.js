@@ -51,6 +51,10 @@ const router = createRouter({
         {
             path: '/login/find-Id',
             component: () => import('@/pages/FindIdPage.vue')
+        },
+        {
+            path: '/ModifyProfilePage',
+            component: () => import('@/pages/ModifyProfilePage.vue')
         }
     ]
 })
