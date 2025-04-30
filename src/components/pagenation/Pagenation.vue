@@ -20,7 +20,7 @@
         </div>
         <!-- 다음 페이지 이동 -->
         <button class="arrow" @click="goNext">
-            <img src="../../assets/icons/right-icon.svg" alt="다음" />
+        <img src="../../assets/icons/right-icon.svg" alt="다음" />
         </button>
         <!-- 맨 마지막 페이지 이동 -->
         <button class="arrow" @click="goLast">
