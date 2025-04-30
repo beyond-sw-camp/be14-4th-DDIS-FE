@@ -56,7 +56,7 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
-import axios from 'axios'
+import axios from '@/utils/axios'
 import Calendar from '@/components/calendar/PersonalCalendar.vue'
 import TodoList from '@/components/calendar/TodoList.vue'
 import PinnedTodoList from '@/components/calendar/PinnedTodoList.vue'

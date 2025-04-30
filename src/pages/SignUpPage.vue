@@ -8,14 +8,14 @@
   
         <div class="password-wrapper">
           <input :type="showPassword ? 'text' : 'password'" v-model="form.password" placeholder="비밀번호" required />
-          <span class="toggle" @click="togglePassword"><img src="@/assets/icons/invisible-icon.svg"></span>
+          <span class="toggle" @click="togglePassword"><img src="../assets/icons/invisible-icon.svg"></span>
         </div>
         <p v-if="errors.password" class="error">{{ errors.password }}</p>
         <p v-else-if="success.password" class="success">{{ success.password }}</p>
   
         <div class="password-wrapper">
           <input :type="showConfirmPassword ? 'text' : 'password'" v-model="form.confirmPassword" placeholder="비밀번호 확인" required />
-          <span class="toggle" @click="toggleConfirmPassword"><img src="@/assets/icons/invisible-icon.svg"></span>
+          <span class="toggle" @click="toggleConfirmPassword"><img src="../assets/icons/invisible-icon.svg"></span>
         </div>
         <p v-if="errors.confirmPassword" class="error">{{ errors.confirmPassword }}</p>
   
