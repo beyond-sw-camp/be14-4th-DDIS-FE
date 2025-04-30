@@ -30,14 +30,6 @@
           <Pagenation :totalPages="totalPages" @change="handlePageChange"/>
         </div>
     </main>
-    <!-- 팔로워 버튼 -->
-<button class="open-btn" @click="openFollower">팔로워 보기</button>
-<Follower v-if="showFollower" @close="closeModals" />
-<!-- 팔로잉 버튼 -->
-<button class="open-btn" @click="openFollowing">팔로잉 보기</button>
-<Following v-if="showFollowing" @close="closeModals" />
-
-
 </template>
   
 <script setup>
@@ -45,26 +37,6 @@
   import AdminHeader from '@/components/header/AdminHeader.vue';
   import ReportBox from '@/components/report/ReportBox.vue';
   import Pagenation from '@/components/pagenation/Pagenation.vue';
-
-  import Follower from '@/components/follow/Follower.vue';
-  import Following from '@/components/follow/Following.vue';
-  const showFollower = ref(false)
-const showFollowing = ref(false)
-
-function openFollower() {
-  showFollower.value = true
-  showFollowing.value = false
-}
-
-function openFollowing() {
-  showFollowing.value = true
-  showFollower.value = false
-}
-
-function closeModals() {
-  showFollower.value = false
-  showFollowing.value = false
-}
 
   const reports = ref([]);
   const pageSize = 8;
