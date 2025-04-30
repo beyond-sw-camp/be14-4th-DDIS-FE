@@ -77,6 +77,7 @@
         else {
           clearInterval(timerInterval)
           isCodeSent.value = false
+          alert('인증번호가 이메일로 발송되었습니다.');
         }
       }, 1000)
     } catch (err) {
@@ -119,40 +120,59 @@
     }
   }
   </script>
-  
-  <style scoped>
-  .find-id-page {
-    max-width: 400px;
-    margin: auto;
-    padding: 20px;
-  }
-  
-  .form-section {
-    margin-top: 20px;
-  }
-  
-  input {
-    display: block;
-    width: 100%;
-    margin-bottom: 12px;
-    padding: 10px;
-    font-size: 14px;
-  }
-  
-  button {
-    width: 100%;
-    padding: 10px;
-    background: #50d4c6;
-    border: none;
-    color: white;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .result {
-    margin-top: 20px;
-    font-size: 16px;
-    text-align: center;
-  }
-  </style>
+
+<style scoped>
+.find-id-page {
+  width: 100%;
+  min-height: calc(100vh - 80px); /* 헤더 높이 제외 */
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 120px; /* 헤더에서 충분히 떨어지게 */
+  box-sizing: border-box;
+}
+
+.form-section {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input {
+  width: 100%;
+  height: 45px;
+  border: 0.5px solid #cdcdcd;
+  border-radius: 5px;
+  padding: 0 14px;
+  margin-bottom: 25px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+button {
+  width: 100%;
+  height: 45px;
+  background-color: #50d4c6;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 11px;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #6ce4dc;
+}
+
+.result {
+  margin-top: 20px;
+  font-size: 16px;
+  text-align: center;
+}
+</style>
