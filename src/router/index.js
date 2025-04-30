@@ -43,6 +43,10 @@ const router = createRouter({
         {
             path: '/chat',
             component: () => import('@/pages/ChatRoomPage.vue')
+        },
+        {
+            path: '/signup',
+            component: () => import('@/pages/SignUpPage.vue')
         }
     ]
 })
