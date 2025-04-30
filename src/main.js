@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import { createPinia } from 'pinia'
 import VCalendar from 'v-calendar'
 import 'v-calendar/style.css'
 import router from './router'
@@ -8,6 +9,9 @@ import router from './router'
 window.global = window
 
 const app = createApp(App)
+const pinia = createPinia()
+
+app.use(pinia)
 app.use(router)
 app.use(VCalendar, {
   locales: {

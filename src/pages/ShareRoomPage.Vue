@@ -52,6 +52,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import dayjs from 'dayjs'
+import axios from '@/utils/axios'
 import Calendar from '@/components/calendar/Calendar.vue'
 import RoomLeftSideBar from '@/components/sidebar/RoomLeftSideBar.vue'
 import RoomRightSideBar from '@/components/sidebar/RoomRightSideBar.vue'

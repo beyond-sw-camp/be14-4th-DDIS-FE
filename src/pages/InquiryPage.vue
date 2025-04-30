@@ -70,7 +70,7 @@
     import Header from '@/components/header/Header.vue';
     import InquiryRegisterModal from '@/components/inquiry/InquiryRegisterModal.vue'
     import { ref, computed, onMounted } from 'vue'
-    import axios from 'axios'
+    import axios from '@/utils/axios'
 
     const showModal = ref(false)
     const currentPage = ref(1)

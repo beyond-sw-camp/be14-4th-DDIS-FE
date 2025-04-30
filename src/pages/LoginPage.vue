@@ -99,6 +99,7 @@ function goToSignup() {
         
         //pinia에 토큰 저장
         authStore.setTokens(result.accessToken, result.refreshToken);
+        authStore.loadTokens()
   
         // 라우팅 처리
         router.push('/'); 
