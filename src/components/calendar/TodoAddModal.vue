@@ -31,11 +31,11 @@
         </div>
 
         <!-- 날짜 선택 -->
-        <div v-if="mode === 'SINGLE'" class="date-picker">
+        <div v-show="mode === 'SINGLE'" class="date-picker">
           <input type="date" v-model="selectedDate" class="date-input" />
         </div>
 
-        <div v-else-if="mode === 'MULTI'" class="date-picker">
+        <div v-show="mode === 'MULTI'" class="date-picker">
           <div class="month-select">
             <select v-model="selectedMonth">
               <option v-for="(label, index) in monthLabels" :key="index" :value="index">
@@ -62,6 +62,19 @@
             >
               {{ d }} ✕
             </span>
+          </div>
+        </div>
+
+        <div v-show="mode === 'REPEAT'" class="repeat-section">
+          <div class="repeat-days">
+            <label v-for="(day, index) in weekDays" :key="day">
+  <input type="checkbox" :value="index" v-model="repeatDays" />
+  <span>{{ day }}</span>
+</label>
+          </div>
+          <div class="repeat-range">
+            <label>시작일: <input type="date" v-model="repeatStart" /></label>
+            <label>종료일: <input type="date" v-model="repeatEnd" /></label>
           </div>
         </div>
 
@@ -99,10 +112,16 @@ const selectedMonth = ref(new Date().getMonth())
 const today = new Date()
 const currentYear = today.getFullYear()
 
+const repeatDays = ref([])
+const repeatStart = ref('')
+const repeatEnd = ref('')
+
 const monthLabels = [
   '1월', '2월', '3월', '4월', '5월', '6월',
   '7월', '8월', '9월', '10월', '11월', '12월'
 ]
+
+const weekDays = ['월', '화', '수', '목', '금', '토', '일']
 
 const calendarDates = computed(() => {
   const dates = []
@@ -177,9 +196,19 @@ function handleConfirm() {
       return
     }
     payload = { ...base, todoDates: multiDates.value }
-  } else {
-    alert('반복 모드는 아직 지원되지 않습니다.')
-    return
+  } else if (mode.value === 'REPEAT') {
+    if (!repeatStart.value || !repeatEnd.value || repeatDays.value.length === 0) {
+      alert('시작일, 종료일, 요일을 모두 선택해주세요.')
+      return
+    }
+    payload = {
+      ...base,
+      repeatInfo: {
+        startDate: repeatStart.value,
+        endDate: repeatEnd.value,
+        days: repeatDays.value.map(Number)  // 0~6 (월~일)
+      }
+    }
   }
 
   emit('add', payload)
@@ -193,6 +222,9 @@ function resetForm() {
   selectedDate.value = props.defaultDate
   multiDates.value = []
   selectedMonth.value = today.getMonth()
+  repeatDays.value = []
+  repeatStart.value = ''
+  repeatEnd.value = ''
 }
 </script>
 
@@ -217,12 +249,13 @@ function resetForm() {
   flex-direction: column;
   gap: 16px;
 }
-.modal-content input {
-  width: 95%;
+.modal-content input{
+  width: 94%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1rem;
+  gap: 5px;
 }
 .modal-content select {
   width: 100%;
@@ -247,6 +280,11 @@ function resetForm() {
   background: #000;
   color: #fff;
 }
+.mode-button:hover{
+  background: #fff;
+  border: 1px solid #000 ;
+  color: #000;
+}
 .modal-actions {
   display: flex;
   gap: 8px;
@@ -259,8 +297,15 @@ function resetForm() {
   border-radius: 8px;
   cursor: pointer;
 }
-.btn-cancel { background: #eee; }
-.btn-confirm { background: #000; color: #fff; }
+.btn-cancel { background: #eee;  border: 1px solid transparent;}
+.btn-confirm { background: #000; color: #fff; border:  1px solid transparent;}
+.btn-cancel:hover, .btn-confirm:hover {
+  background: #fff;
+  border: 1px solid #000 ;
+  color: #000;
+}
+
+
 .selected-dates {
   display: flex;
   flex-wrap: wrap;
@@ -294,5 +339,76 @@ function resetForm() {
 }
 .month-select {
   margin-bottom: 8px;
+}
+.repeat-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.repeat-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: space-between;
+}
+.repeat-days label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  font-weight: 500;
+  font-size: 0.9rem;
+  user-select: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.repeat-days label:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.repeat-days input[type="checkbox"] {
+  display: none;
+}
+.repeat-days input[type="checkbox"]:checked + span {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+.repeat-days label span {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 3px;
+  transition: inherit;
+}
+
+.repeat-days label:hover span {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.repeat-days input[type="checkbox"] {
+  margin-right: 6px;
+}
+.repeat-range {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 15px;
+}
+
+
+.repeat-range label {
+  flex: 1;
 }
 </style>

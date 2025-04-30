@@ -136,7 +136,7 @@ async function loadTodosForDate(date) {
       isDone:              m.isDone,
       isPublic:            m.isPublic,
       pinOrder:            m.pinOrder,
-      categoryName:        base?.personalCategoryName ?? m.personalCategoryName ?? '일반',
+      categoryName:        base?.personalCategoryName ?? m.personalCategoryName ?? '',
       categoryColor:       base?.personalCategoryColorRgb ?? m.personalCategoryColorRgb ?? '#ccc'
     }
   })
