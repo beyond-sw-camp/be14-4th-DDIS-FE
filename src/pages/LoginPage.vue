@@ -47,11 +47,13 @@
   
   <script setup>
   import { ref } from 'vue';
-  import { useRouter } from 'vue-router'; // useRouter 추가
+  import { useRouter } from 'vue-router'; 
+  import { useAuthStore } from '@/stores/useAuthStore';
   import LoginHeader from '@/components/header/LoginHeader.vue';
   import visibleIcon from '@/assets/icons/visible-icon.svg';
   import invisibleIcon from '@/assets/icons/invisible-icon.svg';
   
+  const authStore = useAuthStore();
   const loginForm = ref({
     username: '',
     password: ''
@@ -94,11 +96,9 @@ function goToSignup() {
   
       if (result.message === "로그인 성공") {
         alert("로그인 성공!");
-        console.log("Access Token:", result.accessToken);
-        console.log("Refresh Token:", result.refreshToken);
         
-        // 토큰 저장 예제
-        localStorage.setItem('accessToken', result.accessToken);
+        //pinia에 토큰 저장
+        authStore.setTokens(result.accessToken, result.refreshToken);
   
         // 라우팅 처리
         router.push('/'); 
