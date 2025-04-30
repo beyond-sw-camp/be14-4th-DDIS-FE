@@ -15,24 +15,25 @@
       :class="{ hovered }"
       :style="{ transform: swiped ? 'translateX(80px)' : 'translateX(0)' }"
     >
-      <div class="left-colored" :style="{ backgroundColor: categoryColor }">
+      <div class="left-colored" :style="{ backgroundColor: todo.categoryColor }">
         <img
           class="lock-icon"
-          :src="isPublic ? lockIcons.public : lockIcons.private"
-          :alt="isPublic ? '공개' : '비공개'"
-            width="25"
-            height="25"
+          :src="todo.isPublic ? lockIcons.public : lockIcons.private"
+          :alt="todo.isPublic ? '공개' : '비공개'"
+          width="25"
+          height="25"
           @mousedown.stop
           @click.stop="togglePublic"
         />
       </div>
-      <div class="right-content" :style="{ borderColor: categoryColor }">
+
+      <div class="right-content" :style="{ borderColor: todo.categoryColor }">
         <span class="todo-content">{{ todo.content }}</span>
         <div class="right-buttons">
           <div
             class="status-circle"
-            :class="{ done: todo.is_done }"
-            :style="{ backgroundColor: todo.is_done ? categoryColor : '#e0e0e0' }"
+            :class="{ done: todo.isDone }"
+            :style="{ backgroundColor: todo.isDone ? todo.categoryColor : '#e0e0e0' }"
             @click.stop="toggleDone"
           ></div>
           <button class="pin-btn" @click.stop="togglePin">📌</button>
@@ -43,10 +44,9 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import axios from 'axios'
+import { ref } from 'vue'
 
-const props = defineProps({ todo: Object, categoryColor: String })
+const props = defineProps({ todo: Object })
 const emit = defineEmits(['update-pin', 'toggle-done', 'delete', 'toggle-public'])
 
 const hovered = ref(false)
@@ -54,29 +54,54 @@ const swiped = ref(false)
 const startX = ref(null)
 const SWIPE_THRESHOLD = 30
 
-// immediate public toggle for UI
-const isPublic = ref(props.todo.is_public)
-watch(() => props.todo.is_public, val => { isPublic.value = val })
-
-function toggleDone() { emit('toggle-done', props.todo) }
-function togglePin() { emit('update-pin', props.todo) }
-function deleteTodo() { emit('delete', props.todo) }
-async function togglePublic() {
-  isPublic.value = !isPublic.value
-  const updated = { ...props.todo, is_public: isPublic.value }
-  await axios.patch(`http://localhost:3001/todo_dates/${props.todo.id}`, { is_public: isPublic.value })
-  emit('toggle-public', updated)
+function toggleDone() {
+  emit('toggle-done', {
+    todoNum: props.todo.todoNum,
+    todoDate: props.todo.todoDate,
+    isDone: !props.todo.isDone
+  })
 }
 
-function startSwipe(e) { startX.value = e.clientX }
+function togglePin() {
+  emit('update-pin', {
+    todoNum: props.todo.todoNum,
+    todoDate: props.todo.todoDate
+  })
+}
+
+function deleteTodo() {
+  emit('delete', {
+    todoNum: props.todo.todoNum,
+    todoDate: props.todo.todoDate
+  })
+}
+
+function togglePublic() {
+  emit('toggle-public', {
+    todoNum: props.todo.todoNum,
+    todoDate: props.todo.todoDate,
+    isPublic: !props.todo.isPublic
+  })
+}
+
+function startSwipe(e) {
+  startX.value = e.clientX
+}
+
 function trackSwipe(e) {
   if (startX.value === null) return
   const dx = e.clientX - startX.value
-  if (dx > SWIPE_THRESHOLD) swiped.value = true
-  else if (dx < -SWIPE_THRESHOLD) swiped.value = false
+  swiped.value = dx > SWIPE_THRESHOLD
 }
-function endSwipe() { startX.value = null }
-function cancelSwipe() { startX.value = null; swiped.value = false }
+
+function endSwipe() {
+  startX.value = null
+}
+
+function cancelSwipe() {
+  startX.value = null
+  swiped.value = false
+}
 
 const lockIcons = {
   public: new URL('@/assets/icons/todo-global.svg', import.meta.url).href,
@@ -87,7 +112,6 @@ const lockIcons = {
 <style scoped>
 .todo-item-wrapper {
   position: relative;
-  /* overflow: hidden; */
   width: 750px;
   margin: 0 auto 16px;
   border-radius: 12px;
@@ -112,7 +136,6 @@ const lockIcons = {
 
 .todo-item {
   display: flex;
-  width: calc(100% + 0px);
   background: #fff;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
@@ -134,6 +157,11 @@ const lockIcons = {
   height: 25px;
   filter: brightness(0) invert(1);
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.lock-icon:hover {
+  transform: scale(1.2);
 }
 
 .right-content {
@@ -163,6 +191,11 @@ const lockIcons = {
   border-radius: 50%;
   cursor: pointer;
   background: #e0e0e0;
+  transition: transform 0.2s ease;
+}
+
+.status-circle:hover {
+  transform: scale(1.25);
 }
 
 .status-circle.done {
@@ -175,5 +208,11 @@ const lockIcons = {
   cursor: pointer;
   font-size: 18px;
   padding: 2px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.pin-btn:hover {
+  transform: scale(1.2);
+  color: #f39c12;
 }
 </style>

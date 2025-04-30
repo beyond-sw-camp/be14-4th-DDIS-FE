@@ -13,7 +13,7 @@
 
         <TodoItem
           v-for="todo in group.todos"
-          :key="todo.todo_num"
+          :key="todo.todoNum"
           :todo="todo"
           :categoryColor="group.color"
         @update-pin="handleUpdatePin"
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { computed, watch, toRefs } from 'vue'
+import { computed } from 'vue'
 import TodoItem from './TodoItem.vue'
 
 const props = defineProps({
@@ -38,10 +38,10 @@ const emit = defineEmits(['update-pin', 'toggle-done', 'toggle-public', 'delete'
 const groupedTodos = computed(() => {
   const groups = {}
   props.todos.forEach(todo => {
-    const category = todo.category_name || '기타'
+    const category = todo.categoryName || '기타'
     if (!groups[category]) {
       groups[category] = {
-        color: todo.category_color || '#ccc',
+        color: todo.categoryColor || '#ccc',
         todos: []
       }
     }
@@ -49,20 +49,21 @@ const groupedTodos = computed(() => {
   })
   return groups
 })
+console.log('✅ todos:', props.todos)
 
- function handleUpdatePin(todo) {
-  console.log('TodoList got update-pin', todo)
-   emit('update-pin', todo)
- }
- function handleToggleDone(todo) {
-   emit('toggle-done', todo)
- }
- function handleTogglePublic(todo) {
-   emit('toggle-public', todo)
- }
- function handleDeleteTodo(todo) {
-   emit('delete', todo)
- }
+function handleUpdatePin(payload) {
+  emit('update-pin', payload)
+}
+function handleToggleDone(payload) {
+  emit('toggle-done', payload)
+}
+function handleTogglePublic(payload) {
+  emit('toggle-public', payload)
+}
+function handleDeleteTodo(payload) {
+  emit('delete', payload)
+}
+
 </script>
 
 <style scoped>

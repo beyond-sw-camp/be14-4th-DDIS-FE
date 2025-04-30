@@ -26,7 +26,7 @@
       <!-- 할 일 추가 모달 -->
       <TodoAddModal
         v-if="showAddModal"
-        :visible="showAddModal" 
+        :visible="showAddModal"
         :categories="categories"
         :default-date="selectedDate"
         @add="handleAddTodo"
@@ -35,7 +35,7 @@
 
       <TodoList
         :todos="unpinnedTodos"
-        @update-pin="handlePinCopy"
+        @update-pin="handleTogglePin"
         @toggle-public="handleTogglePublic"
         @toggle-done="handleToggleDone"
         @delete="handleDeleteTodo"
@@ -48,7 +48,7 @@
       <PinnedTodoList
         :todos="pinnedTodos"
         @toggle-done="handleToggleDone"
-        @update-order="handleUpdatePinOrder"
+        @update-order="handleUpdatePinOrder" 
         @update-pin="handleUnpinFromPinned"
       />
     </div>
@@ -56,173 +56,285 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import axios from 'axios'
 import Calendar from '@/components/calendar/PersonalCalendar.vue'
 import TodoList from '@/components/calendar/TodoList.vue'
 import PinnedTodoList from '@/components/calendar/PinnedTodoList.vue'
 import TodoAddModal from '@/components/calendar/TodoAddModal.vue'
 
-const API_BASE = 'http://localhost:3001'
-const dayCompletionRate = ref({})
-const todoExistsDates     = ref({})
-const selectedDate        = ref(getToday())
-const allTodos            = ref([])
-const pinnedTodos         = ref([])
-const categories          = ref([])
-const showAddModal        = ref(false)
+// 기본 설정
+const API_BASE = 'http://localhost:8080'
+const clientNum = 6
 
-// 날짜 포맷 헬퍼
-function getToday() {
-  const today = new Date()
-  return formatLocalDate(today)
+// 날짜 유틸
+function pad(n) {
+  return n.toString().padStart(2, '0')
 }
 function formatLocalDate(dateInput) {
-  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput
-  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`
+  const d = new Date(dateInput)
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+function getToday() {
+  return formatLocalDate(new Date())
 }
 
-onMounted(loadInitialData)
-async function loadInitialData() {
+// 상태 관리
+const dayCompletionRate = ref({})
+const todoExistsDates = ref({})
+const selectedDate = ref(getToday())
+const allTodos = ref([])
+const todosForDate = ref([])
+const pinnedTodos = ref([])
+const showAddModal = ref(false)
+
+onMounted(async () => {
   try {
-    const [datesRes, todosRes, catsRes] = await Promise.all([
-      axios.get(`${API_BASE}/todo_dates`),
-      axios.get(`${API_BASE}/todos`),
-      axios.get(`${API_BASE}/categories`)
-    ])
-    categories.value = catsRes.data
-    mergeData(datesRes.data, todosRes.data)
-  } catch (err) {
-    console.error('데이터 로드 실패:', err)
-  }
-}
+    const allRes = await axios.get(`${API_BASE}/personal-todos/${clientNum}`)
+    allTodos.value = allRes.data.map(item => ({
+      ...item,
+      todoDate: formatLocalDate(item.todoDate)
+    }))
+    updateCalendarState()
+    await loadTodosForDate(selectedDate.value)
+    await loadPinnedTodos()
 
-// todo_dates + todos + categories 머지
-function mergeData(dates, todos) {
-  const merged = dates.map(td => {
-    const todo = todos.find(t => t.todo_num === td.todo_num) || {}
-    const cat  = categories.value.find(c => 
-      c.personal_category_num === todo.personal_category_num
-    ) || {}
+  } catch (e) {
+    console.error(e)
+  }
+})
+
+watch(selectedDate, date => loadTodosForDate(date))
+
+
+// watch(todosForDate, list => {
+//   pinnedTodos.value = list
+//     .filter(t => t.pinOrder > 0)
+//     .sort((a, b) => a.pinOrder - b.pinOrder)
+// }, { immediate: true })
+
+async function loadTodosForDate(date) {
+  const { data: mappings } = await axios.get(
+    `${API_BASE}/personal-todos/${clientNum}/date`,
+    { params: { todoDate: date } }
+  )
+
+  const todosMap = Object.fromEntries(
+    allTodos.value.map(t => [String(t.todoNum), t])
+  )
+
+  todosForDate.value = mappings.filter(m => {
+    const base = todosMap[String(m.todoNum)]
+    return base?.todoContent || m.todoContent
+  })
+  .map(m => {
+    const base = todosMap[String(m.todoNum)] || {}
     return {
-      ...td,
-      content:        todo.content || '',
-      category_color: cat.color   || '#ccc',
-      category_name:  cat.name       || '기타'
+      todoNum:             m.todoNum,
+      todoDate:            formatLocalDate(m.todoDate),
+      content:             base?.todoContent ?? m.todoContent ?? '(내용 없음)',
+      personalCategoryNum: base?.personalCategoryNum ?? m.personalCategoryNum ?? -1,
+      isDone:              m.isDone,
+      isPublic:            m.isPublic,
+      pinOrder:            m.pinOrder,
+      categoryName:        base?.personalCategoryName ?? m.personalCategoryName ?? '기타',
+      categoryColor:       base?.personalCategoryColorRgb ?? m.personalCategoryColorRgb ?? '#ccc'
     }
   })
-  allTodos.value = merged
-  updateCalendarState()
 }
 
 function updateCalendarState() {
-  const rateMap = {}, existMap = {}
+  const rate = {}, exist = {}
   allTodos.value.forEach(item => {
-    const date = item.date
-    rateMap[date] = rateMap[date] || { total:0, done:0 }
-    rateMap[date].total++
-    if (item.is_done) rateMap[date].done++
-    existMap[date] = true
+    exist[item.todoDate] = true
+    rate[item.todoDate] = rate[item.todoDate] || { total: 0, done: 0 }
+    rate[item.todoDate].total++
+    if (item.isDone) rate[item.todoDate].done++
   })
-  Object.keys(rateMap).forEach(d => {
-    const {total, done} = rateMap[d]
-    rateMap[d] = done/total
+  Object.entries(rate).forEach(([d, { total, done }]) => {
+    rate[d] = done / total
   })
-  dayCompletionRate.value = rateMap
-  todoExistsDates.value   = existMap
+  dayCompletionRate.value = rate
+  todoExistsDates.value = exist
 }
 
-// 날짜 선택
-function handleSelectDate(date) {
-  selectedDate.value = date
-}
+function handleSelectDate(date) { selectedDate.value = date }
+function openAddModal() { showAddModal.value = true }
+function closeAddModal() { showAddModal.value = false }
 
-const unpinnedTodos = computed(() =>
-  allTodos.value.filter(t => t.date === selectedDate.value)
-)
-
-// 추가 모달 제어
-function openAddModal() {
-  showAddModal.value = true
-}
-function closeAddModal() {
-  showAddModal.value = false
-}
-
-// 새 Todo 추가 핸들러
-async function handleAddTodo({ content, personal_category_num, client_num, date }) {
-  console.log('[Parent] payload →', { content, personal_category_num, client_num, date })
-
-  // todos 테이블에
-  const resT = await axios.post(`${API_BASE}/todos/`, {
-    content,
-    personal_category_num,
-    client_num
-  })
-
-  const newId = resT.data.id
-  
-  await axios.patch(`${API_BASE}/todos/${newId}`, {
-    todo_num: newId
-  })
-
-
-  const todoNum = newId
-  // todo_dates 테이블에
-  await axios.post(`${API_BASE}/todo_dates`, {
-    todo_num: todoNum,
-    date,           // 모달에서 넘어온 date
-    is_done: false,
-    is_public: false
-  })
-
-
-  await loadInitialData()
-  closeAddModal()
-}
-
-// 핀 복사
-function handlePinCopy(todo) {
-  if (!pinnedTodos.value.find(t => t.id === todo.id)) {
-    pinnedTodos.value.push({ ...todo, pin_order: Date.now() })
+async function handleAddTodo({ content, personal_category_num, isPublic, pinOrder }) {
+  try {
+    await axios.post(
+      `${API_BASE}/personal-todos`,
+      {
+        todoContent: content,
+        createType: 'SINGLE',
+        todoDate: selectedDate.value,
+        personalCategoryNum: personal_category_num,
+        isPublic,
+        pinOrder
+      },
+      { params: { clientNum } }
+    )
+    const allRes = await axios.get(`${API_BASE}/personal-todos/${clientNum}`)
+    allTodos.value = allRes.data.map(item => ({
+      ...item,
+      todoDate: formatLocalDate(item.todoDate)
+    }))
+    updateCalendarState()
+    await loadPinnedTodos()
+    await loadTodosForDate(selectedDate.value)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    closeAddModal()
   }
 }
-// 핀 해제
-function handleUnpinFromPinned(todo) {
-  pinnedTodos.value = pinnedTodos.value.filter(t => t.id !== todo.id)
-}
 
-// 완료 / 공개 토글
-async function handleToggleDone(todo) {
-  todo.is_done = !todo.is_done
-  await axios.patch(`${API_BASE}/todo_dates/${todo.id}`, { is_done: todo.is_done })
-  updateCalendarState()
-}
-async function handleTogglePublic(todo) {
-  todo.is_public = !todo.is_public
-  await axios.patch(`${API_BASE}/todo_dates/${todo.id}`, { is_public: todo.is_public })
-  updateCalendarState()
-}
+async function handleToggleDone({ todoNum, todoDate, isDone }) {
+  try {
+    await axios.patch(
+      `${API_BASE}/personal-todos`,
+      { todoNum, existingTodoDate: todoDate, isDone },
+      { params: { clientNum } }
+    )
+    const t = todosForDate.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
+    if (t) t.isDone = isDone
 
-// 삭제
-async function handleDeleteTodo(todo) {
-  await axios.delete(`${API_BASE}/todo_dates/${todo.id}`)
-  allTodos.value = allTodos.value.filter(t => t.id !== todo.id)
-  pinnedTodos.value = pinnedTodos.value.filter(t => t.id !== todo.id)
-  updateCalendarState()
-}
+    const at = allTodos.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
+    if (at) at.isDone = isDone
+     console.log('[🔄 allTodos 업데이트됨]', at.isDone)
 
-// 핀 순서 업데이트
-async function handleUpdatePinOrder(order) {
-  for (let i=0; i<order.length; i++) {
-    await axios.patch(`${API_BASE}/todo_dates/${order[i].id}`, { pin_order: i+1 })
+    updateCalendarState()
+  } catch (e) {
+    console.error(e)
   }
-  pinnedTodos.value = [...order]
 }
+
+async function handleTogglePublic({ todoNum, todoDate, isPublic }) {
+  console.log('[📩 받은 toggle-public]', { todoNum, todoDate, isPublic }) // ✅ 확인
+
+  try {
+    await axios.patch(
+      `${API_BASE}/personal-todos`,
+      { todoNum, existingTodoDate: todoDate, isPublic },
+      { params: { clientNum } }
+    )
+
+    console.log('[✅ PATCH 완료]', isPublic)
+
+    const t = todosForDate.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
+    if (t){ t.isPublic = isPublic
+      console.log('[🔄 todosForDate 업데이트됨]', t.isPublic)
+    }
+    const at = allTodos.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
+    if (at) at.isPublic = isPublic
+
+
+    updateCalendarState()
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+async function handleDeleteTodo({ todoNum, todoDate }) {
+  try {
+    await axios.delete(
+      `${API_BASE}/personal-todos`,
+      { params: { clientNum, todoNum, todoDate } }
+    )
+    todosForDate.value = todosForDate.value.filter(
+      t => !(t.todoNum === todoNum && t.todoDate === todoDate)
+    )
+
+    console.log('[✅ 삭제 완료] 현재 남은 todosForDate:', todosForDate.value)
+
+    updateCalendarState()
+    await loadPinnedTodos() 
+
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+async function handleUpdatePinOrder(newOrder) {
+  if (!Array.isArray(newOrder)) {
+  console.error('🛑 handleUpdatePinOrder: newOrder가 배열이 아닙니다:', newOrder)
+  return
+}
+
+  try {
+    for (let i = 0; i < newOrder.length; i++) {
+      const t = newOrder[i]
+      await axios.patch(
+        `${API_BASE}/personal-todos`,
+        { todoNum: t.todoNum, existingTodoDate: t.todoDate, pinOrderUpdate: i + 1 },
+        { params: { clientNum } }
+      )
+    }
+    pinnedTodos.value = newOrder.map((t, i) => ({ ...t, pinOrder: i + 1 }))
+    updateCalendarState()
+    await loadPinnedTodos() 
+  } catch (e) {
+    console.error(e)
+  }
+}
+async function loadPinnedTodos() {
+  const { data } = await axios.get(`${API_BASE}/personal-todos/${clientNum}/pinned`)
+  pinnedTodos.value = data.map(item => ({
+    ...item,
+    todoNum: item.todoNum,
+    content: item.todoContent,
+    todoDate: formatLocalDate(item.todoDate),
+    pinOrder: item.pinOrder ?? i + 1,
+    categoryColor: item.personalCategoryColorRgb || '#ccc'  
+  }))
+}
+
+async function handleTogglePin({ todoNum, todoDate }) {
+  try {
+    await axios.patch(`${API_BASE}/personal-todos`, {
+      todoNum,
+      existingTodoDate: todoDate,
+      pinOrderUpdate: true
+    }, {
+      params: { clientNum }
+    })
+
+    await loadTodosForDate(selectedDate.value) // ✅ 현재 날짜의 목록 업데이트
+    await loadPinnedTodos() // ✅ 전체 핀된 목록 다시 불러오기
+  } catch (e) {
+    console.error('📌 핀 고정 실패:', e)
+  }
+}
+
+async function handleUnpinFromPinned(todo) {
+  try {
+    await axios.patch(
+      `${API_BASE}/personal-todos`,
+      { todoNum: todo.todoNum, existingTodoDate: todo.todoDate, pinOrderUpdate: 0 },
+      { params: { clientNum } }
+    )
+    pinnedTodos.value = pinnedTodos.value.filter(
+      t => !(t.todoNum === todo.todoNum && t.todoDate === todo.todoDate)
+    )
+    await loadPinnedTodos()
+  } catch (e) {
+    console.error('핀 해제 실패:', e)
+  }
+}
+
+// const unpinnedTodos = computed(() =>
+//   todosForDate.value.filter(t => t.pinOrder === 0)
+// )
+
+const unpinnedTodos = computed(() => todosForDate.value)
 </script>
 
 
+
 <style scoped>
+/* 기존 스타일 그대로 유지 */
 .container {
   display: flex;
   flex-direction: row;
@@ -232,9 +344,8 @@ async function handleUpdatePinOrder(order) {
   margin: 200px auto 0;
   justify-content: space-between;
   gap: 40px;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
-
 .calendar-area {
   flex: 2;
   min-width: 750px;
@@ -242,7 +353,6 @@ async function handleUpdatePinOrder(order) {
   flex-direction: column;
   gap: 24px;
 }
-
 .side-profile {
   flex: 1;
   min-width: 210px;
@@ -256,11 +366,10 @@ async function handleUpdatePinOrder(order) {
   align-items: center;
   box-shadow: 0 2px 10px 0 rgba(30,30,30,0.04);
 }
-
 .pinned-area {
   flex: 1;
-  max-width: 210px;
-  min-width: 210px;
+  max-width: 250px;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -269,7 +378,6 @@ async function handleUpdatePinOrder(order) {
   padding: 5px 10px 10px;
   box-shadow: 0 2px 10px 0 rgba(30,30,30,0.04);
 }
-
 .pinned-title {
   font-size: 20px;
   font-weight: 700;
@@ -280,8 +388,8 @@ async function handleUpdatePinOrder(order) {
   color: #50D4C6;
   border: 2px solid #50D4C6;
   border-radius: 25px;
+  user-select: none;
 }
-
 .profile-img {
   width: 96px;
   height: 96px;
@@ -291,7 +399,6 @@ async function handleUpdatePinOrder(order) {
   object-fit: cover;
   margin-bottom: 16px;
 }
-
 .nickname {
   font-size: 24px;
   font-weight: 700;
@@ -299,7 +406,6 @@ async function handleUpdatePinOrder(order) {
   letter-spacing: 1px;
   text-align: center;
 }
-
 .follow-info {
   font-size: 14px;
   color: #888;
@@ -308,9 +414,7 @@ async function handleUpdatePinOrder(order) {
   gap: 18px;
   justify-content: center;
 }
-
-.follow-info b { color: #222; font-weight: 800; }
-
+.follow-info b { color: #222; font-weight: 800 }
 .follow-btn {
   width: 100%;
   height: 36px;
@@ -323,7 +427,6 @@ async function handleUpdatePinOrder(order) {
   cursor: pointer;
   margin-top: 6px;
 }
-
 .add-todo-btn {
   align-self: flex-end;
   padding: 10px 20px;
@@ -335,15 +438,12 @@ async function handleUpdatePinOrder(order) {
   cursor: pointer;
   font-weight: 700;
   border: 1px solid transparent;
-
   font-size: 1.125rem;
 }
-
 .add-todo-btn:hover{
   border: 1px solid #111;
   background: #fff;
   box-shadow: 0 2px 10px 0 rgba(30,30,30,0.04);
   color: #000;
-  /* height: 90%; */
 }
 </style>
