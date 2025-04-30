@@ -55,6 +55,14 @@ const router = createRouter({
         {
             path: '/ModifyProfilePage',
             component: () => import('@/pages/ModifyProfilePage.vue')
+        },
+        {
+            path: '/post',
+            component: () => import('@/pages/post/PostPage.vue')
+        },
+        {
+            path: '/post/detail',
+            component: () => import('@/pages/post/PostDetail.vue')
         }
     ]
 })

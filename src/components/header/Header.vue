@@ -138,7 +138,7 @@
             '공지사항': '/notice',
             '문의사항': '/inquiry',
             '채팅방': '/chat',
-            // '모집 게시판': '/board',
+            '모집 게시판': '/post',
             '개인 Todo': '/todo/personal',
             '공동 Todo': '/room',
         }
@@ -148,7 +148,7 @@
     const activeMenu = ref(null)
     const rawMenus = [
     {
-        key: 'board',
+        key: 'post',
         label: '게시판',
         desc: '공동 Todo를 함께할 멤버를 모집하는 게시판입니다.\n함께 목표를 이룰 팀원을 찾아보세요!',
         children: ['모집 게시판'],
