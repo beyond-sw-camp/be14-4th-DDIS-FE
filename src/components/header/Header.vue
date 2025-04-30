@@ -140,7 +140,7 @@
             '채팅방': '/chat',
             // '모집 게시판': '/board',
             '개인 Todo': '/todo/personal',
-            // '공동 Todo': '/todo/shared',
+            '공동 Todo': '/room',
         }
         return mapping[label] || '/' + label.toLowerCase()
     }
