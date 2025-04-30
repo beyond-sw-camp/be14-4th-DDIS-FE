@@ -82,6 +82,7 @@
     onMounted(async () => {
         try {
             const res = await axios.get('http://localhost:3001/inquiries')
+            // const res = await axios.get('http://localhost:8080/inquiries/all')
             inquiries.value = res.data.sort((a, b) => b.id - a.id)
         } catch (err) {
             console.error('문의사항 불러오기 실패:', err)
@@ -116,7 +117,7 @@
             client: '현재사용자'
             }
 
-            const res = await axios.post('http://localhost:3001/inquiries', newInquiry)
+            const res = await axios.post('http://localhost:3001/inquiries/create', newInquiry)
 
             inquiries.value.unshift({ ...newInquiry, id: res.data.id })
             showModal.value = false
