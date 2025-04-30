@@ -212,15 +212,21 @@ async function handleToggleDone({ todoNum, todoDate, isDone }) {
 }
 
 async function handleTogglePublic({ todoNum, todoDate, isPublic }) {
+  console.log('[📩 받은 toggle-public]', { todoNum, todoDate, isPublic }) // ✅ 확인
+
   try {
     await axios.patch(
       `${API_BASE}/personal-todos`,
       { todoNum, existingTodoDate: todoDate, isPublic },
       { params: { clientNum } }
     )
-    const t = todosForDate.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
-    if (t) t.isPublic = isPublic
 
+    console.log('[✅ PATCH 완료]', isPublic)
+
+    const t = todosForDate.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
+    if (t){ t.isPublic = isPublic
+      console.log('[🔄 todosForDate 업데이트됨]', t.isPublic)
+    }
     const at = allTodos.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
     if (at) at.isPublic = isPublic
 

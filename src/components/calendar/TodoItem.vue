@@ -18,14 +18,15 @@
       <div class="left-colored" :style="{ backgroundColor: todo.categoryColor }">
         <img
           class="lock-icon"
-          :src="isPublic.value ? lockIcons.public : lockIcons.private"
-          :alt="isPublic.value ? '공개' : '비공개'"
+          :src="todo.isPublic ? lockIcons.public : lockIcons.private"
+          :alt="todo.isPublic ? '공개' : '비공개'"
           width="25"
           height="25"
           @mousedown.stop
           @click.stop="togglePublic"
         />
       </div>
+
       <div class="right-content" :style="{ borderColor: todo.categoryColor }">
         <span class="todo-content">{{ todo.content }}</span>
         <div class="right-buttons">
@@ -43,78 +44,67 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
-const props = defineProps({
-  todo: Object,
-})
-console.log('TodoItem props.todo =', props.todo)
-
-const emit = defineEmits([
-  'update-pin',
-  'toggle-done',
-  'delete',
-  'toggle-public'
-])
+const props = defineProps({ todo: Object })
+const emit = defineEmits(['update-pin', 'toggle-done', 'delete', 'toggle-public'])
 
 const hovered = ref(false)
 const swiped = ref(false)
 const startX = ref(null)
 const SWIPE_THRESHOLD = 30
 
-// UI 반영용 public 상태
-const isPublic = ref(props.todo.isPublic)
-watch(() => props.todo.isPublic, val => {
-  isPublic.value = val
-})
-console.log(props.todo)
-// 완료 토글
 function toggleDone() {
   emit('toggle-done', {
-    todoNum:  props.todo.todoNum,
+    todoNum: props.todo.todoNum,
     todoDate: props.todo.todoDate,
-    isDone:   !props.todo.isDone
+    isDone: !props.todo.isDone
   })
 }
 
-// 핀 토글
 function togglePin() {
   emit('update-pin', {
-    todoNum:  props.todo.todoNum,
+    todoNum: props.todo.todoNum,
     todoDate: props.todo.todoDate
   })
 }
 
-// 삭제
 function deleteTodo() {
   emit('delete', {
-    todoNum:  props.todo.todoNum,
+    todoNum: props.todo.todoNum,
     todoDate: props.todo.todoDate
   })
 }
 
-// public 토글
 function togglePublic() {
-  isPublic.value = !isPublic.value
   emit('toggle-public', {
-    todoNum:  props.todo.todoNum,
+    todoNum: props.todo.todoNum,
     todoDate: props.todo.todoDate,
-    isPublic: isPublic.value
+    isPublic: !props.todo.isPublic
   })
 }
 
-// swipe logic
-function startSwipe(e) { startX.value = e.clientX }
+function startSwipe(e) {
+  startX.value = e.clientX
+}
+
 function trackSwipe(e) {
   if (startX.value === null) return
   const dx = e.clientX - startX.value
   swiped.value = dx > SWIPE_THRESHOLD
 }
-function endSwipe() { startX.value = null }
-function cancelSwipe() { startX.value = null; swiped.value = false }
+
+function endSwipe() {
+  startX.value = null
+}
+
+function cancelSwipe() {
+  startX.value = null
+  swiped.value = false
+}
 
 const lockIcons = {
-  public:  new URL('@/assets/icons/todo-global.svg', import.meta.url).href,
+  public: new URL('@/assets/icons/todo-global.svg', import.meta.url).href,
   private: new URL('@/assets/icons/todo-lock.svg', import.meta.url).href
 }
 </script>
@@ -122,7 +112,6 @@ const lockIcons = {
 <style scoped>
 .todo-item-wrapper {
   position: relative;
-  /* overflow: hidden; */
   width: 750px;
   margin: 0 auto 16px;
   border-radius: 12px;
@@ -147,7 +136,6 @@ const lockIcons = {
 
 .todo-item {
   display: flex;
-  width: calc(100% + 0px);
   background: #fff;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
@@ -171,9 +159,11 @@ const lockIcons = {
   cursor: pointer;
   transition: transform 0.3s ease;
 }
+
 .lock-icon:hover {
   transform: scale(1.2);
 }
+
 .right-content {
   flex: 1;
   display: flex;
@@ -203,9 +193,11 @@ const lockIcons = {
   background: #e0e0e0;
   transition: transform 0.2s ease;
 }
+
 .status-circle:hover {
   transform: scale(1.25);
 }
+
 .status-circle.done {
   background-color: var(--category-color, #50D4C6);
 }
@@ -218,8 +210,9 @@ const lockIcons = {
   padding: 2px;
   transition: transform 0.3s ease, color 0.3s ease;
 }
+
 .pin-btn:hover {
   transform: scale(1.2);
-  color: #f39c12; /* 주황색 강조 */
+  color: #f39c12;
 }
 </style>
