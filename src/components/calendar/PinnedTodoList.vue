@@ -4,7 +4,7 @@
     <draggable
       tag="div"
       :list="orderedTodos"
-      item-key="id"
+      item-key="todoNum"
       handle=".drag-handle"
       @end="onDragEnd"
     >
@@ -20,7 +20,7 @@
           </div>
 
           <!-- 핀 고정 항목 컨테이너 -->
-          <div class="pinned-item" :style="{ borderColor: todo.category_color }">
+          <div class="pinned-item" :style="{ borderColor: todo.categoryColor }">
             <!-- 1) 스와이프 영역: 날짜와 텍스트만 처리 -->
             <div
               class="content-area"
@@ -34,9 +34,9 @@
                 <div
                   v-if="swipedIndex !== index"
                   class="pinned-date"
-                  :style="{ backgroundColor: todo.category_color }"
+                  :style="{ backgroundColor: todo.categoryColor }"
                 >
-                  {{ formatDate(todo.date) }}
+                  {{ formatDate(todo.tododate) }}
                 </div>
               </div>
               <!-- 텍스트만 소량 이동 -->

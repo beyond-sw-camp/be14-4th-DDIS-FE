@@ -66,6 +66,9 @@
   
   function getDayColor(day) {
     const dateStr = formatLocalDate(day.date)
+    // console.log('날짜:', dateStr, 
+    //           'rate=', props.dayCompletionRate[dateStr],
+    //           'hasTodo=', props.todoExistsDates[dateStr])
     const rate = props.dayCompletionRate[dateStr] || 0
     const hasTodo = props.todoExistsDates?.[dateStr] || false
   

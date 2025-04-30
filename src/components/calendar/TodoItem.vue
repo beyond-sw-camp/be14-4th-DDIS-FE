@@ -15,24 +15,24 @@
       :class="{ hovered }"
       :style="{ transform: swiped ? 'translateX(80px)' : 'translateX(0)' }"
     >
-      <div class="left-colored" :style="{ backgroundColor: categoryColor }">
+      <div class="left-colored" :style="{ backgroundColor: todo.categoryColor }">
         <img
           class="lock-icon"
-          :src="isPublic ? lockIcons.public : lockIcons.private"
-          :alt="isPublic ? '공개' : '비공개'"
-            width="25"
-            height="25"
+          :src="isPublic.value ? lockIcons.public : lockIcons.private"
+          :alt="isPublic.value ? '공개' : '비공개'"
+          width="25"
+          height="25"
           @mousedown.stop
           @click.stop="togglePublic"
         />
       </div>
-      <div class="right-content" :style="{ borderColor: categoryColor }">
+      <div class="right-content" :style="{ borderColor: todo.categoryColor }">
         <span class="todo-content">{{ todo.content }}</span>
         <div class="right-buttons">
           <div
             class="status-circle"
-            :class="{ done: todo.is_done }"
-            :style="{ backgroundColor: todo.is_done ? categoryColor : '#e0e0e0' }"
+            :class="{ done: todo.isDone }"
+            :style="{ backgroundColor: todo.isDone ? todo.categoryColor : '#e0e0e0' }"
             @click.stop="toggleDone"
           ></div>
           <button class="pin-btn" @click.stop="togglePin">📌</button>
@@ -44,42 +44,77 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import axios from 'axios'
 
-const props = defineProps({ todo: Object, categoryColor: String })
-const emit = defineEmits(['update-pin', 'toggle-done', 'delete', 'toggle-public'])
+const props = defineProps({
+  todo: Object,
+})
+console.log('TodoItem props.todo =', props.todo)
+
+const emit = defineEmits([
+  'update-pin',
+  'toggle-done',
+  'delete',
+  'toggle-public'
+])
 
 const hovered = ref(false)
 const swiped = ref(false)
 const startX = ref(null)
 const SWIPE_THRESHOLD = 30
 
-// immediate public toggle for UI
-const isPublic = ref(props.todo.is_public)
-watch(() => props.todo.is_public, val => { isPublic.value = val })
-
-function toggleDone() { emit('toggle-done', props.todo) }
-function togglePin() { emit('update-pin', props.todo) }
-function deleteTodo() { emit('delete', props.todo) }
-async function togglePublic() {
-  isPublic.value = !isPublic.value
-  const updated = { ...props.todo, is_public: isPublic.value }
-  await axios.patch(`http://localhost:3001/todo_dates/${props.todo.id}`, { is_public: isPublic.value })
-  emit('toggle-public', updated)
+// UI 반영용 public 상태
+const isPublic = ref(props.todo.isPublic)
+watch(() => props.todo.isPublic, val => {
+  isPublic.value = val
+})
+console.log(props.todo)
+// 완료 토글
+function toggleDone() {
+  emit('toggle-done', {
+    todoNum:  props.todo.todoNum,
+    todoDate: props.todo.todoDate,
+    isDone:   !props.todo.isDone
+  })
 }
 
+// 핀 토글
+function togglePin() {
+  emit('update-pin', {
+    todoNum:  props.todo.todoNum,
+    todoDate: props.todo.todoDate
+  })
+}
+
+// 삭제
+function deleteTodo() {
+  emit('delete', {
+    todoNum:  props.todo.todoNum,
+    todoDate: props.todo.todoDate
+  })
+}
+
+// public 토글
+function togglePublic() {
+  isPublic.value = !isPublic.value
+  emit('toggle-public', {
+    todoNum:  props.todo.todoNum,
+    todoDate: props.todo.todoDate,
+    isPublic: isPublic.value
+  })
+}
+
+// swipe logic
 function startSwipe(e) { startX.value = e.clientX }
 function trackSwipe(e) {
   if (startX.value === null) return
   const dx = e.clientX - startX.value
-  if (dx > SWIPE_THRESHOLD) swiped.value = true
-  else if (dx < -SWIPE_THRESHOLD) swiped.value = false
+  swiped.value = dx > SWIPE_THRESHOLD
 }
 function endSwipe() { startX.value = null }
 function cancelSwipe() { startX.value = null; swiped.value = false }
 
 const lockIcons = {
-  public: new URL('@/assets/icons/todo-global.svg', import.meta.url).href,
+  public:  new URL('@/assets/icons/todo-global.svg', import.meta.url).href,
   private: new URL('@/assets/icons/todo-lock.svg', import.meta.url).href
 }
 </script>
