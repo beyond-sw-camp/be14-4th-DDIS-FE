@@ -1,16 +1,22 @@
 <template>
   <div class="pinned-wrapper">
-    <!-- draggable: handle='.drag-handle' 지정 -->
     <draggable
       tag="div"
-      :list="orderedTodos"
+      :list="internalTodos"
       item-key="todoNum"
       handle=".drag-handle"
       @end="onDragEnd"
     >
       <template #item="{ element: todo, index }">
-        <div class="pinned-item-wrapper" :key="todo.id">
-          <!-- 스와이프 시 '핀 해제' 버튼 표시 -->
+        <div
+          class="pinned-item-wrapper"
+          :key="`${todo.todoNum}-${todo.todoDate}`"
+          @mousedown.prevent="startSwipe($event, index)"
+          @mousemove.prevent="trackSwipe($event, index)"
+          @mouseup.prevent="endSwipe(index)"
+          @mouseleave.prevent="resetSwipe(index)"
+        >
+          <!-- 핀 해제 버튼 -->
           <div
             v-if="swipedIndex === index"
             class="unpin-action"
@@ -19,37 +25,35 @@
             핀 해제
           </div>
 
-          <!-- 핀 고정 항목 컨테이너 -->
-          <div class="pinned-item" :style="{ borderColor: todo.categoryColor }">
-            <!-- 1) 스와이프 영역: 날짜와 텍스트만 처리 -->
-            <div
-              class="content-area"
-              @mousedown.prevent="startSwipe($event, index)"
-              @mousemove.prevent="trackSwipe($event, index)"
-              @mouseup.prevent="endSwipe(index)"
-              @mouseleave.prevent="resetSwipe(index)"
-            >
+          <!-- 전체 카드 swipe -->
+          <div
+            class="pinned-item"
+            :style="{
+              borderColor: todo.categoryColor,
+              transform: swipedIndex === index ? 'translateX(80px)' : 'translateX(0)',
+              transition: 'transform 0.25s ease'
+            }"
+          >
+            <div class="content-area">
               <div class="left-area">
-                <!-- 스와이프 시 날짜 숨김 -->
                 <div
                   v-if="swipedIndex !== index"
                   class="pinned-date"
                   :style="{ backgroundColor: todo.categoryColor }"
                 >
-                  {{ formatDate(todo.tododate) }}
+                  {{ formatDate(todo.todoDate) }}
                 </div>
               </div>
-              <!-- 텍스트만 소량 이동 -->
-              <div
-                class="middle-content"
-                :style="swipedIndex === index ? { transform: 'translateX(12px)' } : {}"
-              >
+              <div class="middle-content">
                 {{ todo.content }}
               </div>
             </div>
-
-            <!-- 2) 드래그 핸들: 순서 변경만 담당 -->
-            <div class="drag-handle">≡</div>
+            <div
+            class="drag-handle"
+          @mousedown.stop 
+        >
+      ≡
+    </div>
           </div>
         </div>
       </template>
@@ -64,20 +68,19 @@ import draggable from 'vuedraggable'
 const props = defineProps({ todos: Array })
 const emit = defineEmits(['update-order', 'update-pin'])
 
-// 내부 pinned 리스트 관리
 const internalTodos = ref([])
+
 watch(
   () => props.todos,
   newList => {
-    internalTodos.value = newList
-      .filter(t => t.pin_order > 0)
-      .sort((a, b) => a.pin_order - b.pin_order)
+    internalTodos.value = [...(newList || [])]
+      .filter(t => t && t.pinOrder > 0 && t.todoNum != null)
+      .sort((a, b) => a.pinOrder - b.pinOrder)
   },
   { immediate: true, deep: true }
 )
-const orderedTodos = computed(() => internalTodos.value)
 
-// 스와이프 상태 관리
+
 const swipedIndex = ref(null)
 const startX = ref({})
 const isSwiping = ref({})
@@ -89,11 +92,9 @@ function startSwipe(e, idx) {
 }
 function trackSwipe(e, idx) {
   if (!isSwiping.value[idx]) return
-  const s = startX.value[idx]
-  if (s == null) return
-  const delta = e.clientX - s
-  if (delta > SWIPE_THRESHOLD) swipedIndex.value = idx
-  else if (delta < -SWIPE_THRESHOLD) swipedIndex.value = null
+  const dx = e.clientX - startX.value[idx]
+  if (dx > SWIPE_THRESHOLD) swipedIndex.value = idx
+  else if (dx < -SWIPE_THRESHOLD) swipedIndex.value = null
 }
 function endSwipe(idx) {
   startX.value[idx] = null
@@ -105,19 +106,23 @@ function resetSwipe(idx) {
   swipedIndex.value = null
 }
 
-// 핀 해제 이벤트 emit
 function unpin(todo) {
-  emit('update-pin', { ...todo, pin_order: 0 })
+  emit('update-pin', {
+    todoNum: todo.todoNum,
+    todoDate: todo.todoDate,
+    pinOrderUpdate: false
+  })
 }
 
-// 드래그 종료 후 pin_order 재설정 및 emit
 function onDragEnd() {
-  internalTodos.value.forEach((t, i) => { t.pin_order = i + 1 })
+  internalTodos.value.forEach((t, i) => {
+    t.pinOrder = i + 1
+  })
   emit('update-order', internalTodos.value)
 }
 
-// 날짜 포맷 'YYYY-MM-DD' -> 'MM/DD'
 function formatDate(dateStr) {
+  if (!dateStr) return ''
   const [y, m, d] = dateStr.split('-')
   return `${m}/${d}`
 }
@@ -134,14 +139,12 @@ function formatDate(dateStr) {
   position: relative;
   overflow: hidden;
   margin-bottom: 5px;
-
 }
-
 .unpin-action {
   position: absolute;
   left: 0;
   width: 80px;
-  height: calc(100%);
+  height: 100%;
   background: #ff4d4d;
   color: #fff;
   font-weight: bold;
@@ -152,7 +155,6 @@ function formatDate(dateStr) {
   cursor: pointer;
   z-index: 2;
 }
-
 .pinned-item {
   display: flex;
   align-items: center;
@@ -161,7 +163,6 @@ function formatDate(dateStr) {
   border-radius: 12px;
   overflow: hidden;
 }
-
 .content-area {
   flex: 1;
   display: flex;
@@ -169,9 +170,7 @@ function formatDate(dateStr) {
   padding: 8px 12px;
   gap: 12px;
   user-select: none;
-  -webkit-user-drag: none;
 }
-
 .left-area {
   min-width: 48px;
   display: flex;
@@ -184,13 +183,11 @@ function formatDate(dateStr) {
   color: #fff;
   font-weight: bold;
 }
-
 .middle-content {
   flex: 1;
   color: #333;
   transition: transform 0.2s ease;
 }
-
 .drag-handle {
   width: 32px;
   display: flex;

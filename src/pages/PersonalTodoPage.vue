@@ -35,7 +35,7 @@
 
       <TodoList
         :todos="unpinnedTodos"
-        @update-pin="handleUpdatePinOrder"
+        @update-pin="handleTogglePin"
         @toggle-public="handleTogglePublic"
         @toggle-done="handleToggleDone"
         @delete="handleDeleteTodo"
@@ -48,7 +48,7 @@
       <PinnedTodoList
         :todos="pinnedTodos"
         @toggle-done="handleToggleDone"
-        @update-order="handleUpdatePinOrder"
+        @update-order="handleUpdatePinOrder" 
         @update-pin="handleUnpinFromPinned"
       />
     </div>
@@ -97,6 +97,8 @@ onMounted(async () => {
     }))
     updateCalendarState()
     await loadTodosForDate(selectedDate.value)
+    await loadPinnedTodos()
+
   } catch (e) {
     console.error(e)
   }
@@ -104,11 +106,12 @@ onMounted(async () => {
 
 watch(selectedDate, date => loadTodosForDate(date))
 
-watch(todosForDate, list => {
-  pinnedTodos.value = list
-    .filter(t => t.pinOrder > 0)
-    .sort((a, b) => a.pinOrder - b.pinOrder)
-}, { immediate: true })
+
+// watch(todosForDate, list => {
+//   pinnedTodos.value = list
+//     .filter(t => t.pinOrder > 0)
+//     .sort((a, b) => a.pinOrder - b.pinOrder)
+// }, { immediate: true })
 
 async function loadTodosForDate(date) {
   const { data: mappings } = await axios.get(
@@ -179,6 +182,7 @@ async function handleAddTodo({ content, personal_category_num, isPublic, pinOrde
       todoDate: formatLocalDate(item.todoDate)
     }))
     updateCalendarState()
+    await loadPinnedTodos()
     await loadTodosForDate(selectedDate.value)
   } catch (e) {
     console.error(e)
@@ -198,8 +202,8 @@ async function handleToggleDone({ todoNum, todoDate, isDone }) {
     if (t) t.isDone = isDone
 
     const at = allTodos.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
-if (at) at.isDone = isDone
-console.log('[🔄 allTodos 업데이트됨]', at.isDone)
+    if (at) at.isDone = isDone
+     console.log('[🔄 allTodos 업데이트됨]', at.isDone)
 
     updateCalendarState()
   } catch (e) {
@@ -216,6 +220,11 @@ async function handleTogglePublic({ todoNum, todoDate, isPublic }) {
     )
     const t = todosForDate.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
     if (t) t.isPublic = isPublic
+
+    const at = allTodos.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
+    if (at) at.isPublic = isPublic
+
+
     updateCalendarState()
   } catch (e) {
     console.error(e)
@@ -231,13 +240,23 @@ async function handleDeleteTodo({ todoNum, todoDate }) {
     todosForDate.value = todosForDate.value.filter(
       t => !(t.todoNum === todoNum && t.todoDate === todoDate)
     )
+
+    console.log('[✅ 삭제 완료] 현재 남은 todosForDate:', todosForDate.value)
+
     updateCalendarState()
+    await loadPinnedTodos() 
+
   } catch (e) {
     console.error(e)
   }
 }
 
 async function handleUpdatePinOrder(newOrder) {
+  if (!Array.isArray(newOrder)) {
+  console.error('🛑 handleUpdatePinOrder: newOrder가 배열이 아닙니다:', newOrder)
+  return
+}
+
   try {
     for (let i = 0; i < newOrder.length; i++) {
       const t = newOrder[i]
@@ -249,8 +268,37 @@ async function handleUpdatePinOrder(newOrder) {
     }
     pinnedTodos.value = newOrder.map((t, i) => ({ ...t, pinOrder: i + 1 }))
     updateCalendarState()
+    await loadPinnedTodos() 
   } catch (e) {
     console.error(e)
+  }
+}
+async function loadPinnedTodos() {
+  const { data } = await axios.get(`${API_BASE}/personal-todos/${clientNum}/pinned`)
+  pinnedTodos.value = data.map(item => ({
+    ...item,
+    todoNum: item.todoNum,
+    content: item.todoContent,
+    todoDate: formatLocalDate(item.todoDate),
+    pinOrder: item.pinOrder ?? i + 1,
+    categoryColor: item.personalCategoryColorRgb || '#ccc'  
+  }))
+}
+
+async function handleTogglePin({ todoNum, todoDate }) {
+  try {
+    await axios.patch(`${API_BASE}/personal-todos`, {
+      todoNum,
+      existingTodoDate: todoDate,
+      pinOrderUpdate: true
+    }, {
+      params: { clientNum }
+    })
+
+    await loadTodosForDate(selectedDate.value) // ✅ 현재 날짜의 목록 업데이트
+    await loadPinnedTodos() // ✅ 전체 핀된 목록 다시 불러오기
+  } catch (e) {
+    console.error('📌 핀 고정 실패:', e)
   }
 }
 
@@ -264,14 +312,17 @@ async function handleUnpinFromPinned(todo) {
     pinnedTodos.value = pinnedTodos.value.filter(
       t => !(t.todoNum === todo.todoNum && t.todoDate === todo.todoDate)
     )
+    await loadPinnedTodos()
   } catch (e) {
     console.error('핀 해제 실패:', e)
   }
 }
 
-const unpinnedTodos = computed(() =>
-  todosForDate.value.filter(t => t.pinOrder === 0)
-)
+// const unpinnedTodos = computed(() =>
+//   todosForDate.value.filter(t => t.pinOrder === 0)
+// )
+
+const unpinnedTodos = computed(() => todosForDate.value)
 </script>
 
 
@@ -311,8 +362,8 @@ const unpinnedTodos = computed(() =>
 }
 .pinned-area {
   flex: 1;
-  max-width: 210px;
-  min-width: 210px;
+  max-width: 250px;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -331,6 +382,7 @@ const unpinnedTodos = computed(() =>
   color: #50D4C6;
   border: 2px solid #50D4C6;
   border-radius: 25px;
+  user-select: none;
 }
 .profile-img {
   width: 96px;

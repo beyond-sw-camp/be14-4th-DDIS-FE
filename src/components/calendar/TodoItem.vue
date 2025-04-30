@@ -169,8 +169,11 @@ const lockIcons = {
   height: 25px;
   filter: brightness(0) invert(1);
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
-
+.lock-icon:hover {
+  transform: scale(1.2);
+}
 .right-content {
   flex: 1;
   display: flex;
@@ -198,8 +201,11 @@ const lockIcons = {
   border-radius: 50%;
   cursor: pointer;
   background: #e0e0e0;
+  transition: transform 0.2s ease;
 }
-
+.status-circle:hover {
+  transform: scale(1.25);
+}
 .status-circle.done {
   background-color: var(--category-color, #50D4C6);
 }
@@ -210,5 +216,10 @@ const lockIcons = {
   cursor: pointer;
   font-size: 18px;
   padding: 2px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+.pin-btn:hover {
+  transform: scale(1.2);
+  color: #f39c12; /* 주황색 강조 */
 }
 </style>
