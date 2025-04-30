@@ -55,7 +55,7 @@
 <script setup>
     import { ref, computed, onMounted } from 'vue'
     import Header from '@/components/header/Header.vue'
-    import axios from 'axios'
+    import axios from '@/utils/axios'
 
     // 공지사항 목록 상태
     const notices = ref([])

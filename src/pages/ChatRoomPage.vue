@@ -58,7 +58,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
-import axios from 'axios'
+import axios from '@/utils/axios'
 
 const chatList = ref([])
 const search = ref('')
