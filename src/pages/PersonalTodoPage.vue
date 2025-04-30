@@ -27,7 +27,6 @@
       <TodoAddModal
         v-if="showAddModal"
         :visible="showAddModal"
-        :categories="categories"
         :default-date="selectedDate"
         @add="handleAddTodo"
         @close="closeAddModal"
@@ -137,7 +136,7 @@ async function loadTodosForDate(date) {
       isDone:              m.isDone,
       isPublic:            m.isPublic,
       pinOrder:            m.pinOrder,
-      categoryName:        base?.personalCategoryName ?? m.personalCategoryName ?? '기타',
+      categoryName:        base?.personalCategoryName ?? m.personalCategoryName ?? '일반',
       categoryColor:       base?.personalCategoryColorRgb ?? m.personalCategoryColorRgb ?? '#ccc'
     }
   })
@@ -162,34 +161,30 @@ function handleSelectDate(date) { selectedDate.value = date }
 function openAddModal() { showAddModal.value = true }
 function closeAddModal() { showAddModal.value = false }
 
-async function handleAddTodo({ content, personal_category_num, isPublic, pinOrder }) {
+async function handleAddTodo(payload) {
   try {
-    await axios.post(
-      `${API_BASE}/personal-todos`,
-      {
-        todoContent: content,
-        createType: 'SINGLE',
-        todoDate: selectedDate.value,
-        personalCategoryNum: personal_category_num,
-        isPublic,
-        pinOrder
-      },
-      { params: { clientNum } }
-    )
+    console.log('[📤 보내는 payload]', payload)
+
+    await axios.post(`${API_BASE}/personal-todos`, payload, {
+      params: { clientNum }  // @RequestParam으로 받는 clientNum
+    })
+
     const allRes = await axios.get(`${API_BASE}/personal-todos/${clientNum}`)
     allTodos.value = allRes.data.map(item => ({
       ...item,
       todoDate: formatLocalDate(item.todoDate)
     }))
+
     updateCalendarState()
     await loadPinnedTodos()
     await loadTodosForDate(selectedDate.value)
   } catch (e) {
-    console.error(e)
+    console.error('[❌ handleAddTodo 에러]', e)
   } finally {
     closeAddModal()
   }
 }
+
 
 async function handleToggleDone({ todoNum, todoDate, isDone }) {
   try {
