@@ -25,7 +25,7 @@
 
                 <!-- 우측 DM/닉네임/프로필 -->
                 <div class="header-right">
-                    <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
+                    <img src="../../assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
                     <span class="profile-nickname">{{ profile.nickname }}</span>
                         <img
                             :src="profile.image"
@@ -48,11 +48,11 @@
 
                         <div class="profile-modal-menu">
                             <div class="profile-modal-item">
-                                <img src="@/assets/icons/profile-setting.svg" alt="개인정보수정" class="modal-icon">
+                                <img src="../../assets/icons/profile-setting.svg" alt="개인정보수정" class="modal-icon">
                                 <span>개인정보 수정</span>
                             </div>
                             <div class="profile-modal-item">
-                                <img src="@/assets/icons/profile-logout.svg" alt="로그아웃" class="modal-icon">
+                                <img src="../../assets/icons/profile-logout.svg" alt="로그아웃" class="modal-icon">
                                 <span>로그아웃</span>
                             </div>
                         </div>
