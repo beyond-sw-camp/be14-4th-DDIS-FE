@@ -162,7 +162,7 @@ function closeAddModal() { showAddModal.value = false }
 async function handleAddTodo({ content, personal_category_num, isPublic, pinOrder }) {
   try {
     await axios.post(
-      `${API_BASE}/personal-todo`,
+      `${API_BASE}/personal-todos`,
       {
         todoContent: content,
         createType: 'SINGLE',
@@ -190,12 +190,17 @@ async function handleAddTodo({ content, personal_category_num, isPublic, pinOrde
 async function handleToggleDone({ todoNum, todoDate, isDone }) {
   try {
     await axios.patch(
-      `${API_BASE}/personal-todo`,
+      `${API_BASE}/personal-todos`,
       { todoNum, existingTodoDate: todoDate, isDone },
       { params: { clientNum } }
     )
     const t = todosForDate.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
     if (t) t.isDone = isDone
+
+    const at = allTodos.value.find(t => t.todoNum === todoNum && t.todoDate === todoDate)
+if (at) at.isDone = isDone
+console.log('[🔄 allTodos 업데이트됨]', at.isDone)
+
     updateCalendarState()
   } catch (e) {
     console.error(e)
@@ -205,7 +210,7 @@ async function handleToggleDone({ todoNum, todoDate, isDone }) {
 async function handleTogglePublic({ todoNum, todoDate, isPublic }) {
   try {
     await axios.patch(
-      `${API_BASE}/personal-todo`,
+      `${API_BASE}/personal-todos`,
       { todoNum, existingTodoDate: todoDate, isPublic },
       { params: { clientNum } }
     )
@@ -220,7 +225,7 @@ async function handleTogglePublic({ todoNum, todoDate, isPublic }) {
 async function handleDeleteTodo({ todoNum, todoDate }) {
   try {
     await axios.delete(
-      `${API_BASE}/personal-todo`,
+      `${API_BASE}/personal-todos`,
       { params: { clientNum, todoNum, todoDate } }
     )
     todosForDate.value = todosForDate.value.filter(
@@ -237,7 +242,7 @@ async function handleUpdatePinOrder(newOrder) {
     for (let i = 0; i < newOrder.length; i++) {
       const t = newOrder[i]
       await axios.patch(
-        `${API_BASE}/personal-todo`,
+        `${API_BASE}/personal-todos`,
         { todoNum: t.todoNum, existingTodoDate: t.todoDate, pinOrderUpdate: i + 1 },
         { params: { clientNum } }
       )
@@ -252,7 +257,7 @@ async function handleUpdatePinOrder(newOrder) {
 async function handleUnpinFromPinned(todo) {
   try {
     await axios.patch(
-      `${API_BASE}/personal-todo`,
+      `${API_BASE}/personal-todos`,
       { todoNum: todo.todoNum, existingTodoDate: todo.todoDate, pinOrderUpdate: 0 },
       { params: { clientNum } }
     )
