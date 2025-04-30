@@ -62,11 +62,36 @@
     isPasswordVisible.value = !isPasswordVisible.value
   }
 
-  function handleLogin() {
-    console.log('아이디:', loginForm.value.username)
-    console.log('비밀번호:', loginForm.value.password)
-    // 여기에 로그인 API 연동 예정
+  async function handleLogin() {
+  try {
+    const response = await fetch('http://localhost:8080/clients/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        clientId: loginForm.value.username,
+        clientPwd: loginForm.value.password,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (result.message === "로그인 성공") {
+      alert("로그인 성공!");
+      console.log("Access Token:", result.accessToken);
+      console.log("Refresh Token:", result.refreshToken);
+      // 여기서 토큰을 localStorage 등에 저장하거나, 라우팅 처리 가능
+      // 예: localStorage.setItem('accessToken', result.accessToken);
+      // this.$router.push('/home'); 등
+    } else {
+      alert(result.message); // 실패 메시지 출력
+    }
+  } catch (error) {
+    console.error("로그인 실패:", error);
+    alert("로그인 중 오류가 발생했습니다.");
   }
+}
 </script>
 
 <style scoped>
