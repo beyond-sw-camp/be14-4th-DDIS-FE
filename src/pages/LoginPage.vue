@@ -38,8 +38,8 @@
           </div>
           <div class="social-login-label">간편 로그인</div>
         <div class="social-login">
-          <img src="@/assets/icons/google-icon.svg" alt="구글 로그인" class="social-icon" />
-          <img src="@/assets/icons/kakao-icon.svg" alt="카카오 로그인" class="social-icon" />
+          <img src="../assets/icons/google-icon.svg" alt="구글 로그인" class="social-icon" />
+          <img src="../assets/icons/kakao-icon.svg" alt="카카오 로그인" class="social-icon" />
         </div>
       </div>
     </div>
