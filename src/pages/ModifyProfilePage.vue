@@ -13,7 +13,7 @@
         <div class="info-row">
           <label>이메일</label>
           <div class="info-box">
-            <span class="disabled-text">{{ email }}</span>
+            <span class="enable-text">{{ email }}</span>
             <button class="small-button">이메일 변경</button>
           </div>
         </div>
