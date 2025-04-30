@@ -4,7 +4,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
-            path: '/personaltodo',
+            path: '/todo/personal',
             component: () => import('@/pages/PersonalTodoPage.vue')
         },
         {
@@ -47,6 +47,10 @@ const router = createRouter({
         {
             path: '/signup',
             component: () => import('@/pages/SignUpPage.vue')
+        },
+        {
+            path: '/login/find-Id',
+            component: () => import('@/pages/FindIdPage.vue')
         }
     ]
 })
