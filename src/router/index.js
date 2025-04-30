@@ -11,6 +11,15 @@ const router = createRouter({
             path: '/report',
             component: () => import('@/pages/ReportPage.vue')
         },
+        { 
+            path: '/notice',
+            component: () => import('@/pages/NoticePage.vue')
+        },
+        {
+            path: '/notice/:id',
+            component: () => import('@/components/notice/NoticeDetailPage.vue')
+        },
+    
         {
             path: '/sharetodopage',
             component: () => import('@/pages/ShareRoomPage.vue')
@@ -19,6 +28,14 @@ const router = createRouter({
             path: '/login',
             component: () => import('@/pages/LoginPage.vue')
         },
+        { 
+            path: '/inquiry',
+            component: () => import('@/pages/InquiryPage.vue')
+        },
+        {
+            path: '/inquiry/:id',
+            component: () => import('@/components/inquiry/InquiryDetailPage.vue')
+        },   
         {
             path: '/room',
             component: () => import('@/pages/RoomListPage.vue')

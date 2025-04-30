@@ -1,13 +1,17 @@
 <template>
+
     <div class="header-wrap"
         @mouseenter="hoverMega"
         @mouseleave="deactivate">
         <header class="main-header" :class="{ open: activeMenu }">
+
             <div class="inner-header">
+
                 <!-- 좌측 로고 -->
                 <div class="header-left">
                     <img src="/images/logo.png" alt="로고" class="logo-img" />
                 </div>
+
                 <!-- 중앙 메뉴 -->
                 <nav class="header-menu">
                     <div
@@ -18,6 +22,7 @@
                         <span :class="{ hovered: activeMenu === menu.key }">{{ menu.label }}</span>
                     </div>
                 </nav>
+
                 <!-- 우측 DM/닉네임/프로필 -->
                 <div class="header-right">
                     <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
@@ -27,6 +32,7 @@
                             alt="프로필"
                             class="profile-img"
                             @click.stop="toggleProfileModal"/>
+
                     <!-- 프로필 모달 드롭다운 -->
                     <div
                         v-if="showProfileModal"
@@ -39,6 +45,7 @@
                                 <div class="modal-email">{{ profile.email }}</div>
                             </div>
                         </div>
+
                         <div class="profile-modal-menu">
                             <div class="profile-modal-item">
                                 <img src="@/assets/icons/profile-setting.svg" alt="개인정보수정" class="modal-icon">
@@ -50,26 +57,32 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- 오버레이(모달 바깥 클릭 시 닫힘) -->
                     <div v-if="showProfileModal" class="modal-overlay" @click="closeProfileModal"></div>
                 </div>
             </div>
+
             <!-- 메가 메뉴 전체 영역 (hover 시 슬라이드다운) -->
             <div v-if="activeMenu" class="mega-menu">
+
                 <div class="mega-menu-row">
+
                     <!-- 설명 -->
                     <div class="mega-desc">
                         {{ (menus.find(m => m.key === activeMenu) || {}).desc }}
                     </div>
+                    
                     <!-- 중앙 서브메뉴: 활성 메뉴의 children만 한 줄 중앙정렬 -->
                     <div class="mega-items-center">
-                        <div
+                        <RouterLink
                             v-for="item in (menus.find(m => m.key === activeMenu)?.children || [])"
-                            :key="item"
+                            :key="item.label"
+                            :to="item.href"
                             class="mega-item"
-                            >
-                            {{ item }}
-                        </div>
+                        >
+                            {{ item.label }}
+                        </RouterLink>
                     </div>
                 </div>
             </div>
@@ -101,8 +114,38 @@
         showProfileModal.value = false
     }
 
+    function transformMenus(originalMenus) {
+        return originalMenus.map(menu => {
+            const newMenu = { ...menu }
+            if (Array.isArray(menu.children)) {
+            newMenu.children = menu.children.map(child => {
+                if (typeof child === 'string') {
+                return {
+                    label: child,
+                    href: generateHref(child),
+                }
+                }
+                return child
+            })
+            }
+            return newMenu
+        })
+    }
+
+        // 🛠 label을 href로 변환해주는 함수 (매핑 테이블 기반)
+    function generateHref(label) {
+        const mapping = {
+            '공지사항': '/notice',
+            '문의사항': '/inquiry',
+            '모집 게시판': '/board',
+            '개인 Todo': '/todo/personal',
+            '공동 Todo': '/todo/shared',
+        }
+        return mapping[label] || '/' + label.toLowerCase()
+    }
+
     const activeMenu = ref(null)
-    const menus = [
+    const rawMenus = [
     {
         key: 'board',
         label: '게시판',
@@ -122,13 +165,16 @@
         children: ['공지사항', '문의사항'],
     },
     ]
+    const menus = transformMenus(rawMenus)
 
     function activate(key) {
         activeMenu.value = key
     }
+
     function deactivate() {
         activeMenu.value = null
     }
+
     function hoverMega() {
     // noop: 래퍼에서 hover 유지용
     }
@@ -375,6 +421,7 @@
         color: #000000;
         cursor: pointer;
         transition: color 0.18s, font-weight 0.18s;
+        text-decoration: none;
     }
     
     .mega-item:hover {
