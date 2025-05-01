@@ -62,16 +62,16 @@ const router = createRouter({
         },
         {
             path: '/post',
-            component: () => import('@/pages/post/PostPage.vue')
-        },
-        {
-            path: '/post/detail',
-            component: () => import('@/pages/post/PostDetail.vue')
+            component: () => import('@/pages/post/BackPostPage.vue')
         },
         {
             path: '/mypage',
             component: () => import('@/pages/Mypage.vue'),
             meta: { requiresAuth: true } // 인증 필요 시
+        },
+        {
+            path: '/post/:id',
+            component: () => import('@/pages/post/BackPostDetail.vue')
         }
     ]
 })
