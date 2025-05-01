@@ -44,56 +44,61 @@
         </div>
       </div>
     </div>
+
+    <!-- 🛠 승인 수 설정 -->
+    <div class="approve-count-editor">
+      <label for="approveRequiredCount">필요 승인 수:</label>
+      <input
+        id="approveRequiredCount"
+        type="number"
+        v-model.number="approveCount"
+        min="0"
+      />
+      <button @click="updateApproveCount">수정</button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import draggable from 'vuedraggable'
 import ShareTodoModal from '@/components/modal/ShareTodoModal.vue'
 
-// Props
+// ✅ Props 및 Emit 정의
 const props = defineProps({
-  todoList: {
-    type: Array,
-    required: true
-  },
-  approveList: {
-    type: Array,
-    required: true
-  },
-  memberNum: {
-    type: Number,
-    required: true
-  },
-  roomNum: {
-    type: Number,
-    required: true
-  }
+  todoList: Array,
+  approveList: Array,
+  memberNum: Number,
+  roomNum: Number
 })
 
-const emit = defineEmits(['open-approve-modal', 'approve-success', 'approve-reject','open-share-todo-modal'])
+const emit = defineEmits([
+  'open-approve-modal',
+  'approve-success',
+  'approve-reject',
+  'open-share-todo-modal'
+])
 
-// 📌 공유 TODO 중복 제거 (shareTodoNum 기준)
+// ✅ 공유 TODO 중복 제거
 const uniqueTodoList = computed(() => {
   return Array.from(
     new Map(props.todoList.map(todo => [todo.shareTodoNum, todo])).values()
   )
 })
 
-// Approve 모달 열기
+// ✅ Approve Modal
 function openModal() {
   emit('open-approve-modal')
 }
 
-// ShareTODO 모달 상태
+// ✅ ShareTodo Modal
 const isShareTodoModalOpen = ref(false)
 const openShareTodoModal = () => {
   emit('open-share-todo-modal')
 }
-
-// Approve 기능
+// ✅ 승인 처리
 async function approveItem(id) {
+  console.log("값 출력", id,props.memberNum)
   try {
     await fetch('http://localhost:8080/approve/status', {
       method: 'PATCH',
@@ -110,8 +115,43 @@ async function approveItem(id) {
   }
 }
 
-async function rejectItem(id) {
+// ✅ 거절 처리
+function rejectItem(id) {
   emit('approve-reject', id)
+}
+
+// ✅ 승인 수 설정 기능
+const approveCount = ref(0)
+
+// ✅ memberNum 감시해서 승인 수 받아오기
+watch(
+  () => props.memberNum,
+  async (newVal) => {
+    if (!newVal) return
+    try {
+      const res = await fetch(`http://localhost:8080/room/${props.roomNum}/data?memberNum=${newVal}`)
+      const data = await res.json()
+      approveCount.value = data.approveRequiredCount
+    } catch (err) {
+      console.error('초기 승인 수 불러오기 실패:', err)
+    }
+  },
+  { immediate: true }
+)
+
+// ✅ 승인 수 서버 반영
+const updateApproveCount = async () => {
+  try {
+    await fetch(`http://localhost:8080/rooms/${props.roomNum}/approve-count`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ approveRequiredCount: approveCount.value })
+    })
+    alert('승인 수가 수정되었습니다!')
+  } catch (err) {
+    console.error('승인 수 수정 실패:', err)
+    alert('오류가 발생했습니다.')
+  }
 }
 </script>
 
@@ -193,5 +233,20 @@ async function rejectItem(id) {
   border: 1px solid #aaa;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.approve-count-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.approve-count-editor input {
+  width: 60px;
+  padding: 4px;
+  text-align: center;
+  font-size: 16px;
 }
 </style>
