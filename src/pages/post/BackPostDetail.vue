@@ -146,7 +146,7 @@ onMounted(async () => {
   } catch (e) {
     console.error('❌ 게시글 로딩 실패:', e)
     alert('해당 게시글을 찾을 수 없습니다.')
-    router.push('/posts')
+    router.push('/post')
   }
 })
 
@@ -177,7 +177,7 @@ const formatDateRange = (start, end) => {
 }
 
 const goToList = () => {
-  router.push('/posts')
+  router.push('/post')
 }
 
 const handleEdit = () => {
@@ -209,7 +209,7 @@ const handleDelete = async () => {
       if (!res.ok) throw new Error('삭제 실패')
 
       alert('게시글이 삭제되었습니다.')
-      router.push('/posts')
+      router.push('/post')
     } catch (e) {
       console.error('❌ 삭제 실패:', e)
       alert('삭제에 실패했습니다.')
