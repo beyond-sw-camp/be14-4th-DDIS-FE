@@ -2,7 +2,7 @@
   <transition name="fade">
     <div v-if="visible" class="modal-overlay" @click.self="handleClose">
       <div class="modal-content">
-        <h2>할 일을 입력하세요</h2>
+        <h2>To-do를 추가하세요</h2>
 
         <!-- Todo 내용 입력 -->
         <input
@@ -318,6 +318,7 @@ function resetForm() {
   border-radius: 12px;
   cursor: pointer;
   font-size: 0.9rem;
+  user-select: none;
 }
 .calendar-grid {
   display: grid;
@@ -364,6 +365,7 @@ function resetForm() {
   font-size: 0.9rem;
   user-select: none;
   cursor: pointer;
+  user-select: none;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 .repeat-days label:hover {
@@ -405,6 +407,7 @@ function resetForm() {
   gap: 8px;
   flex-wrap: wrap;
   font-size: 15px;
+  user-select: none;
 }
 
 
