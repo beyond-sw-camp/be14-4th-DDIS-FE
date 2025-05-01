@@ -9,14 +9,14 @@
       <div class="cell"></div>
       <div class="cell">
         <img
-          src="@/assets/icons/check-icon.svg"
+          src="../../assets/icons/check-icon.svg"
           alt="승인"
           class="icon clickable"
           :style="{ filter: checkColor, pointerEvents: isClicked ? 'none' : 'auto' }"
           @click="approve"
         />
         <img
-          src="@/assets/icons/reject-icon.svg"
+          src="../../assets/icons/reject-icon.svg"
           alt="비승인"
           class="icon clickable"
           :style="{ filter: rejectColor, pointerEvents: isClicked ? 'none' : 'auto' }"

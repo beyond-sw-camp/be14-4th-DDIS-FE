@@ -4,7 +4,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
-            path: '/personaltodo',
+            path: '/todo/personal',
             component: () => import('@/pages/PersonalTodoPage.vue')
         },
         {
@@ -47,6 +47,31 @@ const router = createRouter({
         {
             path: '/signup',
             component: () => import('@/pages/SignUpPage.vue')
+        },
+        {
+            path: '/login/find-Id',
+            component: () => import('@/pages/FindIdPage.vue')
+        },
+        {
+            path: '/ModifyProfilePage',
+            component: () => import('@/pages/ModifyProfilePage.vue')
+        },
+        {
+            path: '/login/ModifyPassword',
+            component: () => import('@/pages/ModifyPasswordPage.vue')
+        },
+        {
+            path: '/post',
+            component: () => import('@/pages/post/PostPage.vue')
+        },
+        {
+            path: '/post/detail',
+            component: () => import('@/pages/post/PostDetail.vue')
+        },
+        {
+            path: '/mypage',
+            component: () => import('@/pages/Mypage.vue'),
+            meta: { requiresAuth: true } // 인증 필요 시
         }
     ]
 })

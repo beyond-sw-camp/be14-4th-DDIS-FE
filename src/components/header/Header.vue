@@ -25,9 +25,7 @@
 
                 <!-- 우측 DM/닉네임/프로필 -->
                 <div class="header-right">
-                    <RouterLink to="/chat">
-                        <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
-                    </RouterLink>
+                    <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
                     <span class="profile-nickname">{{ profile.nickname }}</span>
                         <img
                             :src="profile.image"
@@ -139,6 +137,7 @@
         const mapping = {
             '공지사항': '/notice',
             '문의사항': '/inquiry',
+            '채팅방': '/chat',
             // '모집 게시판': '/board',
             // '개인 Todo': '/todo/personal',
             // '공동 Todo': '/todo/shared',
@@ -149,40 +148,38 @@
     const activeMenu = ref(null)
     const rawMenus = [
     {
-        key: 'board',
-        label: '게시판',
-        desc: '공동 Todo를 함께할 멤버를 모집하는 게시판입니다.\n함께 목표를 이룰 팀원을 찾아보세요!',
-        children: ['모집 게시판'],
+      key: 'post',
+      label: '게시판',
+      desc: '공동 Todo를 함께할 멤버를 모집하는 게시판입니다.\n함께 목표를 이룰 팀원을 찾아보세요!',
+      children: ['모집 게시판'],
     },
     {
-        key: 'todo',
-        label: 'Todo',
-        desc: '개인 할 일부터 공동 목표까지 한 곳에서 관리하세요.\n팀원들과 Todo를 공유하고, 진행 현황도 확인할 수 있어요!',
-        children: ['개인 Todo', '공동 Todo'],
+      key: 'todo',
+      label: 'Todo',
+      desc: '개인 할 일부터 공동 목표까지 한 곳에서 관리하세요.\n팀원들과 Todo를 공유하고, 진행 현황도 확인할 수 있어요!',
+      children: ['개인 Todo', '공동 Todo'],
     },
     {
         key: 'service',
         label: '서비스',
         desc: '중요한 소식과 안내를 놓치지 마세요.\n최신 공지와 문의사항을 한눈에 확인할 수 있습니다.',
-        children: ['공지사항', '문의사항'],
+        children: ['공지사항', '문의사항','채팅방'],
     },
-    ]
-    const menus = transformMenus(rawMenus)
-
-    function activate(key) {
-        activeMenu.value = key
-    }
-
-    function deactivate() {
-        activeMenu.value = null
-    }
-
-    function hoverMega() {
-    // noop: 래퍼에서 hover 유지용
-    }
-</script>
+  ]
+  const menus = transformMenus(rawMenus)
   
-<style scoped>
+  function activate(key) {
+    activeMenu.value = key
+  }
+  function deactivate() {
+    activeMenu.value = null
+  }
+  function hoverMega() {
+    // hover 영역 유지용
+  }
+  </script>
+  
+  <style scoped>
     .main-header {
         position: fixed;
         top: 0; left: 0;
@@ -431,3 +428,4 @@
         font-weight: 600;
     }
 </style>
+  

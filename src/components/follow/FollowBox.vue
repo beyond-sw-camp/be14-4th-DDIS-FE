@@ -14,24 +14,24 @@
   
   <style scoped>
   .follow-box {
-    width: 497px;
-    height: 117px;
+    width: 300px;
+    height: 70px;
     display: flex;
     align-items: center;
     border-bottom: 1px solid #eee;
-    padding: 0 24px;
+    padding: 0 15px;
   }
   
   .profile-img {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 24px;
   }
   
   .nickname {
-    font-size: 25px;
+    font-size: 16px;
     font-weight: bold;
   }
   </style>

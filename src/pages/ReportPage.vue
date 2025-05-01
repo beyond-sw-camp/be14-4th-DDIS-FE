@@ -37,6 +37,7 @@
   import AdminHeader from '@/components/header/AdminHeader.vue';
   import ReportBox from '@/components/report/ReportBox.vue';
   import Pagenation from '@/components/pagenation/Pagenation.vue';
+  import axios from '@/utils/axios'
 
   const reports = ref([]);
   const pageSize = 8;
