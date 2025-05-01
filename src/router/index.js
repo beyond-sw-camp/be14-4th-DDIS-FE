@@ -72,6 +72,11 @@ const router = createRouter({
             path: '/mypage',
             component: () => import('@/pages/Mypage.vue'),
             meta: { requiresAuth: true } // 인증 필요 시
+        },
+        {
+            path: '/personal-page/:clientNum',
+            name: 'OtherUserPage',
+            component: () => import('@/pages/OtherUserPage.vue')
         }
     ]
 })
