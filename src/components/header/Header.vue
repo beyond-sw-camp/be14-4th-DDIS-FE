@@ -1,6 +1,4 @@
 <template>
-<<<<<<< HEAD
-
     <div class="header-wrap"
         @mouseenter="hoverMega"
         @mouseleave="deactivate">
@@ -50,7 +48,7 @@
                                 <div class="modal-email">{{ user.email }}</div>
                             </div>
                         </div>
-                        <div class="profile-modal-menu">
+                    <div class="profile-modal-menu">
               <RouterLink to="/modify-profile" class="profile-modal-item">
                 <img src="../../assets/icons/profile-setting.svg" alt="개인정보수정" class="modal-icon">
                 <span>개인정보 수정</span>
@@ -91,13 +89,8 @@
 
 
 <script setup>
-    
 
-
-
- 
-
-  import { ref, onMounted,onBeforeUnmount } from 'vue'
+import { ref, onMounted,onBeforeUnmount } from 'vue'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'  // useRouter를 import
@@ -193,19 +186,6 @@ function generateHref(label) {
   return mapping[label] || '/' + label.toLowerCase()
 }
 
-
-
-function activate(key) {
-  activeMenu.value = key
-}
-
-function deactivate() {
-  activeMenu.value = null
-}
-
-function hoverMega() {
-  // hover 영역 유지용
-}
 </script>
 
   
@@ -397,6 +377,7 @@ function hoverMega() {
   padding: 7px 0 4px 0;
   transition: background 0.15s, color 0.15s;
   border-radius: 8px;
+  text-decoration: none;
 }
 
 .profile-modal-item:hover {
