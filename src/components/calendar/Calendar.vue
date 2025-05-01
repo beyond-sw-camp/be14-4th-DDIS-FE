@@ -117,11 +117,12 @@ function isSelected(day) {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
   }
   
   :deep(.custom-calendar .vc-weeks) {
     min-height: unset !important;
+    transition: height 0.3s ease;
+
   }
   
   .date-svg-cell {

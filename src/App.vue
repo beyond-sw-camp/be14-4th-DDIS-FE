@@ -14,6 +14,10 @@
   import { RouterView } from 'vue-router';
   import Header from '@/components/header/Header.vue'
   import Footer from '@/components/footer/Footer.vue'
+  import { useAuthStore } from '@/stores/useAuthStore'
+
+  const authStore = useAuthStore()
+  authStore.loadTokens()
 
   
 </script>
@@ -24,6 +28,10 @@
 
 * {
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 html {

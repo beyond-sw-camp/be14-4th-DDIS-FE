@@ -1,263 +1,293 @@
 {
   "profiles": [
-      {    
-          "id": 1,
-          "nickname": "관리자",
-          "email": "help@tododdudo.com",
-          "image": "/images/admin-profile.png"
-      },
-      {
-          "id": 2,
-          "nickname": "삥삥이",
-          "email": "bbing@mail.com",
-          "image": "/images/header-profile.png"
-      }
+    {
+      "id": "1",
+      "nickname": "관리자",
+      "email": "help@tododdudo.com",
+      "image": "/images/admin-profile.png"
+    },
+    {
+      "id": "2",
+      "nickname": "삥삥이",
+      "email": "bbing@mail.com",
+      "image": "/images/header-profile.png"
+    }
   ],
   "reports": [
-      {
-          "id": 9,
-          "type": "게시글",
-          "date": "2025-04-23",
-          "reporter": "삥삥이",
-          "content": "상업적/홍보성",
-          "status": "처리중",
-          "isProcessed": true,
-          "isApproved": false
-        },
-        {
-          "id": 8,
-          "type": "회원",
-          "date": "2025-04-22",
-          "reporter": "도고미",
-          "content": "욕설/인신공격",
-          "status": "처리중",
-          "isProcessed": true,
-          "isApproved": false
-        },
-        {
-          "id": 7,
-          "type": "게시글",
-          "date": "2025-04-21",
-          "reporter": "하비루",
-          "content": "음란/선정성",
-          "status": "처리중",
-          "isProcessed": true,
-          "isApproved": false
-        },
-        {
-          "id": 6,
-          "type": "게시글",
-          "date": "2025-04-20",
-          "reporter": "제리",
-          "content": "개인정보노출",
-          "status": "처리중",
-          "isProcessed": true,
-          "isApproved": false
-        },
-        {
-          "id": 5,
-          "type": "회원",
-          "date": "2025-04-19",
-          "reporter": "랑랑쓰",
-          "content": "부적절한 닉네임",
-          "status": "처리중",
-          "isProcessed": true,
-          "isApproved": false
-        },
-        {
-          "id": 4,
-          "type": "회원",
-          "date": "2025-04-18",
-          "reporter": "로지",
-          "content": "욕설/인신공격",
-          "status": "처리중",
-          "isProcessed": true,
-          "isApproved": false
-        },
-        {
-          "id": 3,
-          "type": "게시글",
-          "date": "2025-04-17",
-          "reporter": "토미",
-          "content": "불법정보",
-          "status": "처리중",
-          "isProcessed": true,
-          "isApproved": false
-        },
-        {
-          "id": 2,
-          "type": "회원",
-          "date": "2025-04-16",
-          "reporter": "도리",
-          "content": "음란/선정성",
-          "status": "처리중",
-          "isProcessed": true,
-          "isApproved": false
-        },
-        {
-          "id": 1,
-          "type": "게시글",
-          "date": "2025-04-15",
-          "reporter": "삥삥이",
-          "content": "기타",
-          "status": "처리중",
-          "isProcessed": true,
-          "isApproved": false
-        }
+    {
+      "id": "9",
+      "type": "게시글",
+      "date": "2025-04-23",
+      "reporter": "삥삥이",
+      "content": "상업적/홍보성",
+      "status": "처리중",
+      "isProcessed": true,
+      "isApproved": false
+    },
+    {
+      "id": "8",
+      "type": "회원",
+      "date": "2025-04-22",
+      "reporter": "도고미",
+      "content": "욕설/인신공격",
+      "status": "처리중",
+      "isProcessed": true,
+      "isApproved": false
+    },
+    {
+      "id": "7",
+      "type": "게시글",
+      "date": "2025-04-21",
+      "reporter": "하비루",
+      "content": "음란/선정성",
+      "status": "처리중",
+      "isProcessed": true,
+      "isApproved": false
+    },
+    {
+      "id": "6",
+      "type": "게시글",
+      "date": "2025-04-20",
+      "reporter": "제리",
+      "content": "개인정보노출",
+      "status": "처리중",
+      "isProcessed": true,
+      "isApproved": false
+    },
+    {
+      "id": "5",
+      "type": "회원",
+      "date": "2025-04-19",
+      "reporter": "랑랑쓰",
+      "content": "부적절한 닉네임",
+      "status": "처리중",
+      "isProcessed": true,
+      "isApproved": false
+    },
+    {
+      "id": "4",
+      "type": "회원",
+      "date": "2025-04-18",
+      "reporter": "로지",
+      "content": "욕설/인신공격",
+      "status": "처리중",
+      "isProcessed": true,
+      "isApproved": false
+    },
+    {
+      "id": "3",
+      "type": "게시글",
+      "date": "2025-04-17",
+      "reporter": "토미",
+      "content": "불법정보",
+      "status": "처리중",
+      "isProcessed": true,
+      "isApproved": false
+    },
+    {
+      "id": "2",
+      "type": "회원",
+      "date": "2025-04-16",
+      "reporter": "도리",
+      "content": "음란/선정성",
+      "status": "처리중",
+      "isProcessed": true,
+      "isApproved": false
+    },
+    {
+      "id": "1",
+      "type": "게시글",
+      "date": "2025-04-15",
+      "reporter": "삥삥이",
+      "content": "기타",
+      "status": "처리중",
+      "isProcessed": true,
+      "isApproved": false
+    }
   ],
-  "todoList" : [
-    { "id": 1, "text": "아침 7시에 일어나기" },
-    { "id": 2, "text": "하루에 30분 자격증 공부하기" }
+  "todoList": [
+    {
+      "id": "1",
+      "text": "아침 7시에 일어나기"
+    },
+    {
+      "id": "2",
+      "text": "하루에 30분 자격증 공부하기"
+    }
   ],
-  "approveList" : [
-    { "id": 1, "requesterName": "CANDDY" },
-    { "id": 2, "requesterName": "OKKZZI" }
+  "approveList": [
+    {
+      "id": "1",
+      "requesterName": "CANDDY"
+    },
+    {
+      "id": "2",
+      "requesterName": "OKKZZI"
+    }
   ],
   "rooms": [
-    { "id": 1, "title": "공부습관방", "content": "공부습관을 만드는 사람들의 모임입니다." },
-    { "id": 2, "title": "아침형인간", "content": "매일 아침 일찍 일어나 도전하는 방입니다." },
-    { "id": 3, "title": "헬스메이트", "content": "운동 인증과 헬스 루틴을 함께 공유합니다." },
-    { "id": 4, "title": "다이어트파티", "content": "다이어트 식단과 운동을 서로 응원하는 방입니다." },
-    { "id": 5, "title": "하루만 공부해", "content": "하루만! 단 하루만 공부하기로 약속하는 방입니다." }
+    {
+      "id": "1",
+      "title": "공부습관방",
+      "content": "공부습관을 만드는 사람들의 모임입니다."
+    },
+    {
+      "id": "2",
+      "title": "아침형인간",
+      "content": "매일 아침 일찍 일어나 도전하는 방입니다."
+    },
+    {
+      "id": "3",
+      "title": "헬스메이트",
+      "content": "운동 인증과 헬스 루틴을 함께 공유합니다."
+    },
+    {
+      "id": "4",
+      "title": "다이어트파티",
+      "content": "다이어트 식단과 운동을 서로 응원하는 방입니다."
+    },
+    {
+      "id": "5",
+      "title": "하루만 공부해",
+      "content": "하루만! 단 하루만 공부하기로 약속하는 방입니다."
+    }
   ],
   "follows": [
     {
-      "id": 1,
+      "id": "1",
       "nickname": "삥삥이",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 2,
+      "id": "2",
       "nickname": "팔로워2",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 3,
+      "id": "3",
       "nickname": "팔로워3",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 4,
+      "id": "4",
       "nickname": "팔로워4",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 5,
+      "id": "5",
       "nickname": "팔로워5",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 6,
+      "id": "6",
       "nickname": "팔로워6",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 7,
+      "id": "7",
       "nickname": "팔로워7",
       "profile-img": "/images/header-profile.png"
     }
   ],
   "followings": [
     {
-      "id": 1,
+      "id": "1",
       "nickname": "삥삥이",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 2,
+      "id": "2",
       "nickname": "팔로잉2",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 3,
+      "id": "3",
       "nickname": "팔로잉3",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 4,
+      "id": "4",
       "nickname": "팔로잉4",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 5,
+      "id": "5",
       "nickname": "팔로잉5",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 6,
+      "id": "6",
       "nickname": "팔로잉6",
       "profile-img": "/images/header-profile.png"
     },
     {
-      "id": 7,
+      "id": "7",
       "nickname": "팔로잉7",
       "profile-img": "/images/header-profile.png"
     }
-  ], 
-
-  "notices": [
-        {
-            "id": 1,
-            "title": "유저 피드백 반영 안내",
-            "content": "많은 분들의 의견을 반영해 UI가 개선되었습니다.",
-            "date": "2025-04-15 19:10:00"
-        },
-        {
-            "id": 2,
-            "title": "공지사항 기능 개선",
-            "content": "공지사항에 댓글 기능이 추가되었습니다.",
-            "date": "2025-04-16 08:40:00"
-        },
-        {
-            "id": 3,
-            "title": "정기 점검 예고",
-            "content": "'5월 3일 새벽 1시부터 3시까지 점검이 진행됩니다.",
-            "date": "2025-04-17 17:50:00"
-        },
-        {
-            "id": 4,
-            "title": "계정 보안 강화 안내",
-            "content": "2단계 인증 기능이 추가되었습니다. 설정을 권장드립니다.",
-            "date": "2025-04-18 13:20:00"
-        },
-        {
-            "id": 5,
-            "title": "사이트 업데이트 공지",
-            "content": "최신 버전으로 업데이트 시 안정성이 향상됩니다.",
-            "date": "2025-04-19 09:30:00"
-        },
-        {
-            "id": 6,
-            "title": "이벤트 안내",
-            "content": "5월 가정의 달 맞이 출석 이벤트가 시작됩니다!",
-            "date": "2025-04-20 11:00:00"
-        },
-        {
-            "id": 7,
-            "title": "서버 오류 안내",
-            "content": "4월 20일 오전 중 발생한 서버 오류는 복구 완료되었습니다.",
-            "date": "2025-04-21 16:45:00"
-        },
-        {
-            "id": 8,
-            "title": "이용 약관 변경 안내",
-            "content": "안녕하세요, to-do ddu-du 팀입니다.\n\n보다 나은 서비스 제공을 위해 \"이용 약관\"이 일부 변경될 예정입니다.\n변경된 약관은 2025년 5월 1일부터 적용되며, 주요 변경 사항은 다음과 같습니다.",
-            "date": "2025-04-22 09:15:00"
-        },
-        {
-            "id": 9,
-            "title": "신규 기능 출시",
-            "content": "친구와 할 일 공유 기능이 추가되었습니다. 많은 이용 바랍니다!",
-            "date": "2025-04-23 14:00:00"
-        },
-        {
-            "id": 10,
-            "title": "서비스 점검 안내",
-            "content": "4월 30일 오전 2시부터 서비스 점검이 예정되어 있습니다.",
-            "date": "2025-04-24 10:30:00"
-        }
   ],
-  
+  "notices": [
+    {
+      "id": "1",
+      "title": "유저 피드백 반영 안내",
+      "content": "많은 분들의 의견을 반영해 UI가 개선되었습니다.",
+      "date": "2025-04-15 19:10:00"
+    },
+    {
+      "id": "2",
+      "title": "공지사항 기능 개선",
+      "content": "공지사항에 댓글 기능이 추가되었습니다.",
+      "date": "2025-04-16 08:40:00"
+    },
+    {
+      "id": "3",
+      "title": "정기 점검 예고",
+      "content": "'5월 3일 새벽 1시부터 3시까지 점검이 진행됩니다.",
+      "date": "2025-04-17 17:50:00"
+    },
+    {
+      "id": "4",
+      "title": "계정 보안 강화 안내",
+      "content": "2단계 인증 기능이 추가되었습니다. 설정을 권장드립니다.",
+      "date": "2025-04-18 13:20:00"
+    },
+    {
+      "id": "5",
+      "title": "사이트 업데이트 공지",
+      "content": "최신 버전으로 업데이트 시 안정성이 향상됩니다.",
+      "date": "2025-04-19 09:30:00"
+    },
+    {
+      "id": "6",
+      "title": "이벤트 안내",
+      "content": "5월 가정의 달 맞이 출석 이벤트가 시작됩니다!",
+      "date": "2025-04-20 11:00:00"
+    },
+    {
+      "id": "7",
+      "title": "서버 오류 안내",
+      "content": "4월 20일 오전 중 발생한 서버 오류는 복구 완료되었습니다.",
+      "date": "2025-04-21 16:45:00"
+    },
+    {
+      "id": "8",
+      "title": "이용 약관 변경 안내",
+      "content": "안녕하세요, to-do ddu-du 팀입니다.\n\n보다 나은 서비스 제공을 위해 \"이용 약관\"이 일부 변경될 예정입니다.\n변경된 약관은 2025년 5월 1일부터 적용되며, 주요 변경 사항은 다음과 같습니다.",
+      "date": "2025-04-22 09:15:00"
+    },
+    {
+      "id": "9",
+      "title": "신규 기능 출시",
+      "content": "친구와 할 일 공유 기능이 추가되었습니다. 많은 이용 바랍니다!",
+      "date": "2025-04-23 14:00:00"
+    },
+    {
+      "id": "10",
+      "title": "서비스 점검 안내",
+      "content": "4월 30일 오전 2시부터 서비스 점검이 예정되어 있습니다.",
+      "date": "2025-04-24 10:30:00"
+    }
+  ],
   "inquiries": [
     {
       "id": "1",
@@ -379,8 +409,7 @@
       "content": "앱을 재설치 후 다시 로그인 시도해보세요.",
       "date": "2025-04-23 14:30:00"
     }
-  ]  ,
-
+  ],
   "clients": [
     {
       "client_num": 6,
@@ -673,6 +702,41 @@
       "personal_category_num": 2,
       "client_num": 7,
       "todo_num": "c0f2"
+    },
+    {
+      "id": "cfe3",
+      "content": "ㅇ",
+      "personal_category_num": 1,
+      "client_num": 6,
+      "todo_num": "cfe3"
+    },
+    {
+      "id": "607a",
+      "content": "추가해보자",
+      "personal_category_num": null,
+      "client_num": null,
+      "todo_num": "607a"
+    },
+    {
+      "id": "edb4",
+      "content": "추ㅏㄱ추가",
+      "personal_category_num": 1,
+      "client_num": 6,
+      "todo_num": "edb4"
+    },
+    {
+      "id": "55ca",
+      "content": "추가",
+      "personal_category_num": null,
+      "client_num": null,
+      "todo_num": "55ca"
+    },
+    {
+      "id": "77a4",
+      "content": "ㅇㅇ",
+      "personal_category_num": 6,
+      "client_num": 6,
+      "todo_num": "77a4"
     }
   ],
   "todo_dates": [
@@ -787,14 +851,6 @@
       "is_public": false,
       "pin_order": 0,
       "id": "2725"
-    },
-    {
-      "todo_num": 5,
-      "date": "2025-04-22",
-      "is_done": true,
-      "is_public": true,
-      "pin_order": 3,
-      "id": "e752"
     },
     {
       "todo_num": 5,
@@ -967,9 +1023,9 @@
     {
       "todo_num": 10,
       "date": "2025-04-22",
-      "is_done": true,
+      "is_done": false,
       "is_public": true,
-      "pin_order": 1,
+      "pin_order": 2,
       "id": "ca97"
     },
     {
@@ -1023,7 +1079,7 @@
     {
       "todo_num": 11,
       "date": "2025-04-22",
-      "is_done": true,
+      "is_done": false,
       "is_public": false,
       "pin_order": 1,
       "id": "6521"
@@ -1134,25 +1190,12 @@
       "is_public": false
     },
     {
-      "id": "b9a0",
-      "todo_num": "b2d4",
-      "date": "2025-04-01",
-      "is_done": true,
-      "is_public": false
-    },
-    {
-      "id": "11f6",
-      "todo_num": "3796",
-      "date": "2025-04-01",
-      "is_done": true,
-      "is_public": false
-    },
-    {
       "id": "3c7b",
       "todo_num": "6a1e",
       "date": "2025-04-01",
       "is_done": true,
-      "is_public": false
+      "is_public": false,
+      "pin_order": 4
     },
     {
       "id": "e2f8",
@@ -1173,7 +1216,8 @@
       "todo_num": "f623",
       "date": "2025-04-01",
       "is_done": true,
-      "is_public": false
+      "is_public": false,
+      "pin_order": 3
     },
     {
       "id": "5bc4",
@@ -1216,200 +1260,20 @@
       "date": "2025-04-07",
       "is_done": true,
       "is_public": false
+    },
+    {
+      "id": "66ac",
+      "todo_num": "607a",
+      "date": "2025-04-19",
+      "is_done": false,
+      "is_public": false
+    },
+    {
+      "id": "6144",
+      "todo_num": "77a4",
+      "date": "2025-04-18",
+      "is_done": false,
+      "is_public": false
     }
   ]
-}
-    "profiles": [
-        {    
-            "id": 1,
-            "nickname": "관리자",
-            "email": "help@tododdudo.com",
-            "image": "/images/admin-profile.png"
-        },
-        {
-            "id": 2,
-            "nickname": "삥삥이",
-            "email": "bbing@mail.com",
-            "image": "/images/header-profile.png"
-        }
-    ],
-    "reports": [
-        {
-            "id": 9,
-            "type": "게시글",
-            "date": "2025-04-23",
-            "reporter": "삥삥이",
-            "content": "상업적/홍보성",
-            "status": "처리중",
-            "isProcessed": true,
-            "isApproved": false
-          },
-          {
-            "id": 8,
-            "type": "회원",
-            "date": "2025-04-22",
-            "reporter": "도고미",
-            "content": "욕설/인신공격",
-            "status": "처리중",
-            "isProcessed": true,
-            "isApproved": false
-          },
-          {
-            "id": 7,
-            "type": "게시글",
-            "date": "2025-04-21",
-            "reporter": "하비루",
-            "content": "음란/선정성",
-            "status": "처리중",
-            "isProcessed": true,
-            "isApproved": false
-          },
-          {
-            "id": 6,
-            "type": "게시글",
-            "date": "2025-04-20",
-            "reporter": "제리",
-            "content": "개인정보노출",
-            "status": "처리중",
-            "isProcessed": true,
-            "isApproved": false
-          },
-          {
-            "id": 5,
-            "type": "회원",
-            "date": "2025-04-19",
-            "reporter": "랑랑쓰",
-            "content": "부적절한 닉네임",
-            "status": "처리중",
-            "isProcessed": true,
-            "isApproved": false
-          },
-          {
-            "id": 4,
-            "type": "회원",
-            "date": "2025-04-18",
-            "reporter": "로지",
-            "content": "욕설/인신공격",
-            "status": "처리중",
-            "isProcessed": true,
-            "isApproved": false
-          },
-          {
-            "id": 3,
-            "type": "게시글",
-            "date": "2025-04-17",
-            "reporter": "토미",
-            "content": "불법정보",
-            "status": "처리중",
-            "isProcessed": true,
-            "isApproved": false
-          },
-          {
-            "id": 2,
-            "type": "회원",
-            "date": "2025-04-16",
-            "reporter": "도리",
-            "content": "음란/선정성",
-            "status": "처리중",
-            "isProcessed": true,
-            "isApproved": false
-          },
-          {
-            "id": 1,
-            "type": "게시글",
-            "date": "2025-04-15",
-            "reporter": "삥삥이",
-            "content": "기타",
-            "status": "처리중",
-            "isProcessed": true,
-            "isApproved": false
-          }
-    ],
-    "todoList" : [
-      { "id": 1, "text": "아침 7시에 일어나기" },
-      { "id": 2, "text": "하루에 30분 자격증 공부하기" }
-    ],
-    "approveList" : [
-      { "id": 1, "requesterName": "CANDDY" },
-      { "id": 2, "requesterName": "OKKZZI" }
-    ],
-    
-      "rooms": [
-        { "id": 1, "title": "공부습관방", "content": "공부습관을 만드는 사람들의 모임입니다." },
-        { "id": 2, "title": "아침형인간", "content": "매일 아침 일찍 일어나 도전하는 방입니다." },
-        { "id": 3, "title": "헬스메이트", "content": "운동 인증과 헬스 루틴을 함께 공유합니다." },
-        { "id": 4, "title": "다이어트파티", "content": "다이어트 식단과 운동을 서로 응원하는 방입니다." },
-        { "id": 5, "title": "하루만 공부해", "content": "하루만! 단 하루만 공부하기로 약속하는 방입니다." }
-      ]
-    
-    
-    ],
-    "post": [
-        {
-          "id": 1,
-          "category": "일상",
-          "title": "같이 매일 3시간씩 뉴스 요약하실 분 구합니다",
-          "status": "모집중"
-        },
-        {
-          "id": 2,
-          "category": "건강",
-          "title": "같이 매일 3시간씩 운동하실 분 구합니다",
-          "status": "모집중"
-        },
-        {
-          "id": 3,
-          "category": "자기개발",
-          "title": "같이 매일 3시간씩 코딩 공부하실 분 구합니다",
-          "status": "모집중"
-        },
-        {
-          "id": 4,
-          "category": "학습",
-          "title": "같이 매일 3시간씩 자격증 준비하실 분 구합니다",
-          "status": "모집중"
-        },
-        {
-          "id": 5,
-          "category": "학습",
-          "title": "같이 매일 3시간씩 일본어 공부하실 분 구합니다",
-          "status": "모집중"
-        },
-        {
-          "id": 6,
-          "category": "자기개발",
-          "title": "같이 매일 1시간씩 창작 글쓰기 하실 분 구합니다",
-          "status": "모집중"
-        },
-        {
-          "id": 7,
-          "category": "일상",
-          "title": "같이 매일 3시간씩 블로그 쓰실 분 구합니다",
-          "status": "모집중"
-        },
-        {
-          "id": 8,
-          "category": "건강",
-          "title": "같이 매일 3시간씩 플랭크 챌린지 하실 분 구합니다",
-          "status": "모집중"
-        },
-        {
-          "id": 9,
-          "category": "학습",
-          "title": "같이 매일 3시간씩 독서하실 분 구합니다",
-          "status": "모집마감"
-        },
-        {
-          "id": 10,
-          "category": "문화",
-          "title": "같이 매일 3시간씩 그림 그리실 짝꿍 구합니다",
-          "status": "모집중"
-        }
-      ]
-      
-
-
-
-
-
 }

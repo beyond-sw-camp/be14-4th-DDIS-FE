@@ -57,12 +57,21 @@ const router = createRouter({
             component: () => import('@/pages/ModifyProfilePage.vue')
         },
         {
-            path: '/post',
-            component: () => import('@/pages/post/PostPage.vue')
+            path: '/login/ModifyPassword',
+            component: () => import('@/pages/ModifyPasswordPage.vue')
         },
         {
-            path: '/post/detail',
-            component: () => import('@/pages/post/PostDetail.vue')
+            path: '/post',
+            component: () => import('@/pages/post/BackPostPage.vue')
+        },
+        {
+            path: '/mypage',
+            component: () => import('@/pages/Mypage.vue'),
+            meta: { requiresAuth: true } // 인증 필요 시
+        },
+        {
+            path: '/post/:id',
+            component: () => import('@/pages/post/BackPostDetail.vue')
         }
     ]
 })

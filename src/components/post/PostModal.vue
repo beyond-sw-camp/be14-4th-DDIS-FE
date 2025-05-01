@@ -143,7 +143,10 @@ const handleDetailSubmit = (detailData: any) => {
   min-height: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  position: relative; /* ✅ 상세 설정의 기준 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .modal-header {
@@ -152,6 +155,7 @@ const handleDetailSubmit = (detailData: any) => {
   margin-bottom: 30px;
   padding-bottom: 20px;
   border-bottom: 1px solid #eee;
+  width: 100%;
 }
 
 .modal-header h2 {
@@ -178,13 +182,22 @@ const handleDetailSubmit = (detailData: any) => {
 }
 
 .modal-body {
-  position: relative; /* ✅ PostDetailSettings 겹치기 위해 */
+  position: relative;
   min-height: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .form-section {
   transition: opacity 0.3s ease;
   opacity: 1;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .form-section.fade {
@@ -196,8 +209,6 @@ const handleDetailSubmit = (detailData: any) => {
   margin-bottom: 24px;
   width: 100%;
   max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .form-group label {
@@ -232,6 +243,7 @@ const handleDetailSubmit = (detailData: any) => {
   margin-top: 30px;
   border-top: 1px solid #eee;
   padding-top: 20px;
+  width: 100%;
 }
 
 .button-group {
@@ -280,25 +292,26 @@ const handleDetailSubmit = (detailData: any) => {
 }
 
 .content-container {
-  max-width: 600px;
-  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .content-guide {
-  margin-bottom: 12px;
-  background-color: #f8f9fa;
-  padding: 16px;
-  border-radius: 6px;
-  border: 1px solid #e9ecef;
   width: 100%;
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  text-align: left;
 }
 
 .guide-format {
-  font-family: monospace;
-  white-space: pre;
-  line-height: 1.5;
-  margin: 0 0 12px 0;
-  color: #495057;
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  color: #666;
 }
 
 .content-guide p {
@@ -308,10 +321,12 @@ const handleDetailSubmit = (detailData: any) => {
 }
 
 .content-input {
-  font-family: monospace;
-  white-space: pre-wrap;
-  line-height: 1.5;
-  padding: 16px;
+  width: 100%;
+  min-height: 300px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: vertical;
 }
 
 .form-textarea {

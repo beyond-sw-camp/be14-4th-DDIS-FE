@@ -1,187 +1,174 @@
 <template>
-
-    <div class="header-wrap"
-        @mouseenter="hoverMega"
-        @mouseleave="deactivate">
-        <header class="main-header" :class="{ open: activeMenu }">
-
-            <div class="inner-header">
-
-                <!-- 좌측 로고 -->
-                <div class="header-left">
-                    <img src="/images/logo.png" alt="로고" class="logo-img" />
-                </div>
-
-                <!-- 중앙 메뉴 -->
-                <nav class="header-menu">
-                    <div
-                        v-for="menu in menus"
-                        :key="menu.key"
-                        class="menu-item"
-                        @mouseenter="activate(menu.key)">
-                        <span :class="{ hovered: activeMenu === menu.key }">{{ menu.label }}</span>
-                    </div>
-                </nav>
-
-                <!-- 우측 DM/닉네임/프로필 -->
-                <div class="header-right">
-                    <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
-                    <span class="profile-nickname">{{ profile.nickname }}</span>
-                        <img
-                            :src="profile.image"
-                            alt="프로필"
-                            class="profile-img"
-                            @click.stop="toggleProfileModal"/>
-
-                    <!-- 프로필 모달 드롭다운 -->
-                    <div
-                        v-if="showProfileModal"
-                        class="profile-modal"
-                        @click.stop>
-                        <div class="profile-modal-header">
-                            <img :src="profile.image" alt="프로필" class="modal-profile-img" />
-                            <div class="modal-info">
-                                <div class="modal-nickname">{{ profile.nickname }}</div>
-                                <div class="modal-email">{{ profile.email }}</div>
-                            </div>
-                        </div>
-
-                        <div class="profile-modal-menu">
-                            <div class="profile-modal-item">
-                                <img src="@/assets/icons/profile-setting.svg" alt="개인정보수정" class="modal-icon">
-                                <span>개인정보 수정</span>
-                            </div>
-                            <div class="profile-modal-item">
-                                <img src="@/assets/icons/profile-logout.svg" alt="로그아웃" class="modal-icon">
-                                <span>로그아웃</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 오버레이(모달 바깥 클릭 시 닫힘) -->
-                    <div v-if="showProfileModal" class="modal-overlay" @click="closeProfileModal"></div>
-                </div>
-            </div>
-
-            <!-- 메가 메뉴 전체 영역 (hover 시 슬라이드다운) -->
-            <div v-if="activeMenu" class="mega-menu">
-
-                <div class="mega-menu-row">
-
-                    <!-- 설명 -->
-                    <div class="mega-desc">
-                        {{ (menus.find(m => m.key === activeMenu) || {}).desc }}
-                    </div>
-                    
-                    <!-- 중앙 서브메뉴: 활성 메뉴의 children만 한 줄 중앙정렬 -->
-                    <div class="mega-items-center">
-                        <RouterLink
-                            v-for="item in (menus.find(m => m.key === activeMenu)?.children || [])"
-                            :key="item.label"
-                            :to="item.href"
-                            class="mega-item"
-                        >
-                            {{ item.label }}
-                        </RouterLink>
-                    </div>
-                </div>
-            </div>
-        </header>
-    </div>
-</template>
-
-<script setup>
-    import { ref, onMounted, onBeforeUnmount } from 'vue'
-
-    const profile = ref({
-        nickname: '',
-        email: '',
-        image: ''
-    })
-
-    onMounted(async () => {
-        const res = await fetch('http://localhost:3001/profiles/2')
-        const data = await res.json()
-        profile.value = data
-    })
-
-    const showProfileModal = ref(false)
-
-    function toggleProfileModal() {
-        showProfileModal.value = !showProfileModal.value
-    }
-    function closeProfileModal() {
-        showProfileModal.value = false
-    }
-
-    function transformMenus(originalMenus) {
-        return originalMenus.map(menu => {
-            const newMenu = { ...menu }
-            if (Array.isArray(menu.children)) {
-            newMenu.children = menu.children.map(child => {
-                if (typeof child === 'string') {
-                return {
-                    label: child,
-                    href: generateHref(child),
-                }
-                }
-                return child
-            })
-            }
-            return newMenu
-        })
-    }
-
-        // 🛠 label을 href로 변환해주는 함수 (매핑 테이블 기반)
-    function generateHref(label) {
-        const mapping = {
-            '공지사항': '/notice',
-            '문의사항': '/inquiry',
-            '채팅방': '/chat',
-            '모집 게시판': '/post',
-            '개인 Todo': '/todo/personal',
-            '공동 Todo': '/room',
-        }
-        return mapping[label] || '/' + label.toLowerCase()
-    }
-
-    const activeMenu = ref(null)
-    const rawMenus = [
-    {
-        key: 'post',
-        label: '게시판',
-        desc: '공동 Todo를 함께할 멤버를 모집하는 게시판입니다.\n함께 목표를 이룰 팀원을 찾아보세요!',
-        children: ['모집 게시판'],
-    },
-    {
-        key: 'todo',
-        label: 'Todo',
-        desc: '개인 할 일부터 공동 목표까지 한 곳에서 관리하세요.\n팀원들과 Todo를 공유하고, 진행 현황도 확인할 수 있어요!',
-        children: ['개인 Todo', '공동 Todo'],
-    },
-    {
-        key: 'service',
-        label: '서비스',
-        desc: '중요한 소식과 안내를 놓치지 마세요.\n최신 공지와 문의사항을 한눈에 확인할 수 있습니다.',
-        children: ['공지사항', '문의사항','채팅방'],
-    },
-    ]
-    const menus = transformMenus(rawMenus)
-
-    function activate(key) {
-        activeMenu.value = key
-    }
-
-    function deactivate() {
-        activeMenu.value = null
-    }
-
-    function hoverMega() {
-    // noop: 래퍼에서 hover 유지용
-    }
-</script>
+    <div class="header-wrap" @mouseenter="hoverMega" @mouseleave="deactivate">
+      <header class="main-header" :class="{ open: activeMenu }">
+        <div class="inner-header">
+          <!-- 좌측 로고 -->
+          <div class="header-left">
+            <img src="/images/logo.png" alt="로고" class="logo-img" />
+          </div>
   
-<style scoped>
+          <!-- 중앙 메뉴 -->
+          <nav class="header-menu">
+            <div
+              v-for="menu in menus"
+              :key="menu.key"
+              class="menu-item"
+              @mouseenter="activate(menu.key)">
+              <span :class="{ hovered: activeMenu === menu.key }">{{ menu.label }}</span>
+            </div>
+          </nav>
+  
+          <!-- 우측 DM/닉네임/프로필 -->
+          <div class="header-right">
+            <img src="../../assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
+            <span class="profile-nickname">{{ user.nickname }}</span>
+            <img
+              :src="user.image"
+              alt="프로필"
+              class="profile-img"
+              @click.stop="toggleProfileModal" />
+  
+            <!-- 프로필 모달 드롭다운 -->
+            <div v-if="showProfileModal" class="profile-modal" @click.stop>
+              <div class="profile-modal-header">
+                <img :src="user.image" alt="프로필" class="modal-profile-img" />
+                <div class="modal-info">
+                  <div class="modal-nickname">{{ user.nickname }}</div>
+                  <div class="modal-email">{{ user.email }}</div>
+                </div>
+              </div>
+  
+              <div class="profile-modal-menu">
+                <div class="profile-modal-item">
+                  <img src="../../assets/icons/profile-setting.svg" alt="개인정보수정" class="modal-icon">
+                  <span>개인정보 수정</span>
+                </div>
+                <div class="profile-modal-item" @click="logout">
+                  <img src="../../assets/icons/profile-logout.svg" alt="로그아웃" class="modal-icon">
+                  <span>로그아웃</span>
+                </div>
+              </div>
+            </div>
+  
+            <!-- 오버레이 -->
+            <div v-if="showProfileModal" class="modal-overlay" @click="closeProfileModal"></div>
+          </div>
+        </div>
+  
+        <!-- 메가 메뉴 -->
+        <div v-if="activeMenu" class="mega-menu">
+          <div class="mega-menu-row">
+            <div class="mega-desc">
+              {{ (menus.find(m => m.key === activeMenu) || {}).desc }}
+            </div>
+            <div class="mega-items-center">
+              <RouterLink
+                v-for="item in (menus.find(m => m.key === activeMenu)?.children || [])"
+                :key="item.label"
+                :to="item.href"
+                class="mega-item">
+                {{ item.label }}
+              </RouterLink>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref, onMounted } from 'vue'
+  import { useAuthStore } from '@/stores/useAuthStore'
+  import { storeToRefs } from 'pinia'
+  
+  const authStore = useAuthStore()
+  const { user } = storeToRefs(authStore)
+  
+  const showProfileModal = ref(false)
+  
+  onMounted(async () => {
+    authStore.loadTokens()
+    await authStore.fetchUserProfile()
+  })
+  
+  function toggleProfileModal() {
+    showProfileModal.value = !showProfileModal.value
+  }
+  
+  function closeProfileModal() {
+    showProfileModal.value = false
+  }
+  
+  function logout() {
+    authStore.logout()
+    closeProfileModal()
+  }
+  
+  function transformMenus(originalMenus) {
+    return originalMenus.map(menu => {
+      const newMenu = { ...menu }
+      if (Array.isArray(menu.children)) {
+        newMenu.children = menu.children.map(child => {
+          if (typeof child === 'string') {
+            return {
+              label: child,
+              href: generateHref(child),
+            }
+          }
+          return child
+        })
+      }
+      return newMenu
+    })
+  }
+  
+  function generateHref(label) {
+    const mapping = {
+      '공지사항': '/notice',
+      '문의사항': '/inquiry',
+      '채팅방': '/chat',
+      '모집 게시판': '/post',
+      '개인 Todo': '/todo/personal',
+      '공동 Todo': '/room',
+    }
+    return mapping[label] || '/' + label.toLowerCase()
+  }
+  
+  const activeMenu = ref(null)
+  const rawMenus = [
+    {
+      key: 'post',
+      label: '게시판',
+      desc: '공동 Todo를 함께할 멤버를 모집하는 게시판입니다.\n함께 목표를 이룰 팀원을 찾아보세요!',
+      children: ['모집 게시판'],
+    },
+    {
+      key: 'todo',
+      label: 'Todo',
+      desc: '개인 할 일부터 공동 목표까지 한 곳에서 관리하세요.\n팀원들과 Todo를 공유하고, 진행 현황도 확인할 수 있어요!',
+      children: ['개인 Todo', '공동 Todo'],
+    },
+    {
+      key: 'service',
+      label: '서비스',
+      desc: '중요한 소식과 안내를 놓치지 마세요.\n최신 공지와 문의사항을 한눈에 확인할 수 있습니다.',
+      children: ['공지사항', '문의사항','채팅방'],
+    },
+  ]
+  const menus = transformMenus(rawMenus)
+  
+  function activate(key) {
+    activeMenu.value = key
+  }
+  function deactivate() {
+    activeMenu.value = null
+  }
+  function hoverMega() {
+    // hover 영역 유지용
+  }
+  </script>
+  
+  <style scoped>
     .main-header {
         position: fixed;
         top: 0; left: 0;
@@ -430,3 +417,4 @@
         font-weight: 600;
     }
 </style>
+  
