@@ -403,7 +403,7 @@ function resetForm() {
 }
 .repeat-range {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column; /* 이 줄이 핵심! */
   gap: 8px;
   flex-wrap: wrap;
   font-size: 15px;

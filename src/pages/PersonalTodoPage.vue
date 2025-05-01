@@ -291,6 +291,8 @@ const unpinnedTodos = computed(() => todosForDate.value)
 
 <style scoped>
 .container {
+  overflow: visible;
+  position: relative; 
   margin-top: 100px !important;  
   display: flex;
   flex-direction: row;
@@ -300,11 +302,12 @@ const unpinnedTodos = computed(() => todosForDate.value)
   margin: 60px auto 0;
   justify-content: space-between;
   gap: 40px;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 .side-area {
-  
+  overflow: visible;
+  position: relative; 
   display: flex;
   flex-direction: column;
   min-width: 210px;
@@ -325,6 +328,8 @@ const unpinnedTodos = computed(() => todosForDate.value)
 
 .today-comment {
   margin-top: 20px;
+  overflow: visible;
+  position: relative; 
 }
 
 .profile-img {
@@ -388,7 +393,7 @@ const unpinnedTodos = computed(() => todosForDate.value)
 .settings-wrapper {
   position: relative;
   display: inline-block;
-  
+margin-bottom: 10px;  
 }
 
 .settings-btn {
@@ -469,7 +474,8 @@ const unpinnedTodos = computed(() => todosForDate.value)
 
 .add-todo-btn {
   align-self: flex-end;
-  padding: 10px 20px;
+  /* margin-right: 5px; */
+  padding: 6px 25px;
   margin-right: 10px;
   background: #000;
   color: #fff;
@@ -478,6 +484,7 @@ const unpinnedTodos = computed(() => todosForDate.value)
   cursor: pointer;
   font-weight: 700;
   font-size: 1.125rem;
+  border: 1px solid transparent;
 }
 
 .add-todo-btn:hover {
@@ -486,4 +493,5 @@ const unpinnedTodos = computed(() => todosForDate.value)
   color: #000;
   box-shadow: 0 2px 10px 0 rgba(30,30,30,0.04);
 }
+
 </style>

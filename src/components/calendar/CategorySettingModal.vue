@@ -23,7 +23,7 @@
 
         <div class="form-group">
           <label>카테고리명</label>
-          <input v-model="categoryName" />
+          <input v-model="categoryName" class="category-input" />
         </div>
 
         <div class="form-group">
@@ -31,10 +31,10 @@
           <div class="color-palette">
             <div
               v-for="color in colorOptions"
-              :key="color"
+              :key="color.key"
               class="color-circle"
-              :class="{ selected: selectedColor === color }"
-              :style="{ backgroundColor: colorRgbaMap[color] }"
+              :class="{ selected: selectedColorKey === color.key }"
+              :style="{ backgroundColor: color.rgba }"
               @click="() => handleColorSelect(color)"
             ></div>
           </div>
@@ -65,26 +65,24 @@ import axios from '@/utils/axios'
 
 const emit = defineEmits(['close', 'refresh'])
 const clientNum = 6
-
+const confirm = () => emit('confirm')
+const cancel = () => emit('cancel')
 const categories = ref([])
 const selectedCategoryId = ref(null)
 const categoryName = ref('')
-const selectedColor = ref('')
+const selectedColorKey = ref('TURQUOISE')
 const showDeleteConfirm = ref(false)
-
+// 바깥 클릭 방지용 빈 함수
+const preventClose = () => {}
 const colorOptions = [
-  'RED', 'ORANGE', 'LIGHT_GREEN', 'TURQUOISE', 'SKY_BLUE', 'PURPLE', 'VIOLET'
+  { key: 'RED', rgba: 'rgba(255, 140, 154, 1)' },
+  { key: 'ORANGE', rgba: 'rgba(255, 170, 140, 1)' },
+  { key: 'LIGHT_GREEN', rgba: 'rgba(197, 230, 149, 1)' },
+  { key: 'TURQUOISE', rgba: 'rgba(80, 212, 198, 1)' },
+  { key: 'SKY_BLUE', rgba: 'rgba(140, 194, 255, 1)' },
+  { key: 'PURPLE', rgba: 'rgba(174, 140, 255, 1)' },
+  { key: 'VIOLET', rgba: 'rgba(193, 132, 202, 1)' }
 ]
-
-const colorRgbaMap = {
-  RED: 'rgba(255, 140, 154, 1)',
-  ORANGE: 'rgba(255, 170, 140, 1)',
-  LIGHT_GREEN: 'rgba(197, 230, 149, 1)',
-  TURQUOISE: 'rgba(80, 212, 198, 1)',
-  SKY_BLUE: 'rgba(140, 194, 255, 1)',
-  PURPLE: 'rgba(174, 140, 255, 1)',
-  VIOLET: 'rgba(193, 132, 202, 1)'
-}
 
 onMounted(fetchCategories)
 
@@ -94,7 +92,6 @@ async function fetchCategories() {
     categories.value = data.map(item => ({
       id: item.personalCategoryNum,
       name: item.personalCategoryName,
-      color: getColorNameFromRgba(item.personalCategoryColorRgb),
       colorRgba: item.personalCategoryColorRgb
     }))
     await nextTick()
@@ -104,22 +101,18 @@ async function fetchCategories() {
   }
 }
 
-function getColorNameFromRgba(rgba) {
-  return Object.keys(colorRgbaMap).find(key => colorRgbaMap[key] === rgba) || 'TURQUOISE'
-}
-
 function selectCategory(category) {
   selectedCategoryId.value = category.id
   categoryName.value = category.name
-  selectedColor.value = category.color
+  const found = colorOptions.find(opt => opt.rgba === category.colorRgba)
+  selectedColorKey.value = found ? found.key : 'TURQUOISE'
 }
 
 function handleColorSelect(color) {
-  selectedColor.value = color
+  selectedColorKey.value = color.key
   const selected = categories.value.find(cat => cat.id === selectedCategoryId.value)
   if (selected) {
-    selected.color = color
-    selected.colorRgba = colorRgbaMap[color]
+    selected.colorRgba = color.rgba
   }
 }
 
@@ -127,7 +120,7 @@ async function handleSave() {
   try {
     await axios.patch(
       `/personal-categories/${selectedCategoryId.value}`,
-      { name: categoryName.value, color: selectedColor.value },
+      { name: categoryName.value, color: selectedColorKey.value },
       { params: { clientNum } }
     )
     await fetchCategories()
@@ -141,13 +134,25 @@ async function handleSave() {
 
 async function handleAddCategory() {
   try {
+    const baseName = '새 카테고리'
+    let index = 1
+    let finalName = baseName
+    const nameExists = name => categories.value.some(c => c.name === name)
+
+    while (nameExists(finalName)) {
+      finalName = `${baseName} ${index++}`
+    }
+
     await axios.post(`/personal-categories`, {
-      name: `새 카테고리`,
-      color: 'TURQUOISE'
+      name: finalName,
+      color: selectedColorKey.value
     }, {
       params: { clientNum }
     })
+
     await fetchCategories()
+    const created = categories.value.find(c => c.name === finalName)
+    if (created) selectCategory(created)
   } catch (e) {
     alert('카테고리 추가 실패!')
   }
@@ -169,7 +174,7 @@ async function deleteCategory(action) {
     } else {
       selectedCategoryId.value = null
       categoryName.value = ''
-      selectedColor.value = ''
+      selectedColorKey.value = 'TURQUOISE'
     }
     emit('refresh')
   } catch (e) {
@@ -178,7 +183,6 @@ async function deleteCategory(action) {
   }
 }
 </script>
-
 
 <style scoped>
 .modal-overlay {
@@ -189,6 +193,7 @@ async function deleteCategory(action) {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+	
 }
 
 .modal-box {
@@ -212,37 +217,53 @@ async function deleteCategory(action) {
 }
 
 .category-sidebar {
-  width: 150px;
-  background: #f8f8f8;
+	padding-top: 10px;
+  min-width: 160px;
+  background: #f1f1f1;
   padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   max-height: 340px;
   overflow-y: auto;
+  box-sizing: content-box;
 }
 
 .category-item {
-  padding: 8px;
+  padding: 8%;
   border-radius: 10px;
   color: #000;
   font-weight: 400;
   cursor: pointer;
   transition: all 0.2s;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   font-size: 13px;
+  opacity: 0.8;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.category-item:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .category-add {
-  padding: 6px;
-  background: #000;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.85);
   color: #fff;
   border-radius: 10px;
   text-align: center;
   cursor: pointer;
   font-weight: 700;
-  transition: background 0.2s;
   font-size: 14px;
+  transition: all 0.2s ease;
+  opacity: 0.9;
+}
+
+.category-add:hover {
+  background: rgba(0, 0, 0, 1);
+  opacity: 1;
 }
 
 .category-content {
@@ -260,8 +281,13 @@ async function deleteCategory(action) {
   gap: 6px;
 }
 
+.form-group input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
 .color-palette {
-	align-items: ;
   display: flex;
   gap: 10px;
   margin-top: 8px;
@@ -277,7 +303,7 @@ async function deleteCategory(action) {
 }
 
 .color-circle.selected {
-  border-color: #000;
+  border-color: #666;
   transform: scale(1.1);
 }
 
@@ -300,13 +326,14 @@ async function deleteCategory(action) {
 .save-btn {
   background: #000;
   color: #fff;
-	border: 1px solid #eee;
+  border: 1px solid #eee;
 }
 
 .save-btn:hover {
   background: #fff;
   color: #000;
   border: 1px solid #000;
+  transform: none;
 }
 
 .delete-btn {
@@ -327,7 +354,7 @@ async function deleteCategory(action) {
   background: white;
   padding: 24px;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
   text-align: center;
   z-index: 1100;
 }
@@ -354,6 +381,9 @@ async function deleteCategory(action) {
 .confirm-actions .cancel {
   background: #ccc;
   color: #000;
+}
+.category-sidebar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
 .sub {
