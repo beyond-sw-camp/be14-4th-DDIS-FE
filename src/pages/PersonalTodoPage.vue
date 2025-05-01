@@ -6,8 +6,12 @@
         <img src="/images/header-profile.png" alt="프로필" class="profile-img" />
         <div class="nickname">CANDDY</div>
         <div class="follow-info">
-          <span>팔로우 <b>32</b></span>
-          <span>팔로잉 <b>59</b></span>
+          <span @click="showFollowerModal = true" style="cursor: pointer;">
+            팔로우 <b>{{ followerCount }}</b>
+          </span>
+          <span @click="showFollowingModal = true" style="cursor: pointer;">
+            팔로잉 <b>{{ followingCount }}</b>
+          </span>
         </div>
         <button class="follow-btn">팔로우</button>
       </div>
@@ -18,14 +22,14 @@
       </div>
     </div>
 
-    <!-- 가운데: 캘린더더 영역 -->
+    <!-- 가운데: 캘린더 영역 -->
     <div class="calendar-area">
       <div class="calendar-header">
         <div class="settings-wrapper" @click="toggleSettingsDropdown">
           <button class="settings-btn">설정</button>
           <div v-if="showSettingsDropdown" class="dropdown-menu">
             <div class="dropdown-item" @click="openCategoryModal">카테고리 설정</div>
-            <div class="dropdown-item">캘린더 설정</div>
+            <!-- <div class="dropdown-item">캘린더 설정</div> -->
           </div>
         </div>
       </div>
@@ -72,6 +76,10 @@
     @close="showCategoryModal = false"
     @refresh="handleCategoryRefresh"
   />
+
+  <Follower v-if="showFollowerModal" @close="showFollowerModal = false" />
+  <Following v-if="showFollowingModal" @close="showFollowingModal = false" />
+
 </template>
 
 <script setup>
@@ -83,6 +91,14 @@ import PinnedTodoList from '@/components/calendar/PinnedTodoList.vue'
 import TodoAddModal from '@/components/calendar/TodoAddModal.vue'
 import TodoCompletionChart from '@/components/calendar/TodoCompletionChart.vue'
 import CategorySettingModal from '@/components/calendar/CategorySettingModal.vue'
+import Follower from '@/components/follow/Follower.vue'
+import Following from '@/components/follow/Following.vue'
+
+const showFollowerModal = ref(false)
+const showFollowingModal = ref(false)
+
+const followerCount = ref(0)
+const followingCount = ref(0)
 
 const API_BASE = 'http://localhost:8080'
 const clientNum = 6
@@ -109,7 +125,10 @@ function getToday() {
   return formatLocalDate(new Date())
 }
 
-onMounted(fetchAllTodos)
+onMounted(() => {
+  fetchAllTodos()
+  fetchFollowCounts()
+})
 
 watch(selectedDate, date => loadTodosForDate(date))
 
@@ -122,6 +141,28 @@ function openCategoryModal() {
 }
 function handleCategoryRefresh() {
   fetchAllTodos()
+}
+
+async function fetchFollowCounts() {
+  try {
+    const token = localStorage.getItem('accessToken')
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    const clientId = payload.sub
+
+    const resFollowers = await fetch(`http://localhost:8080/follows/${clientId}/followers`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    const followers = await resFollowers.json()
+    followerCount.value = followers.length
+
+    const resFollowings = await fetch(`http://localhost:8080/follows/${clientId}/followings`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    const followings = await resFollowings.json()
+    followingCount.value = followings.length
+  } catch (e) {
+    console.error('[❌ 팔로우 수 로딩 실패]', e)
+  }
 }
 
 async function fetchAllTodos() {
@@ -286,6 +327,7 @@ async function handleUnpinFromPinned(todo) {
 
 const unpinnedTodos = computed(() => todosForDate.value)
 </script>
+
 
 
 
