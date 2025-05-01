@@ -9,7 +9,9 @@
 
                 <!-- 좌측 로고 -->
                 <div class="header-left">
-                    <img src="/images/logo.png" alt="로고" class="logo-img" />
+                    <RouterLink to="/">
+                        <img src="/images/logo.png" alt="로고" class="logo-img" />
+                    </RouterLink>
                 </div>
 
                 <!-- 중앙 메뉴 -->
@@ -25,7 +27,9 @@
 
                 <!-- 우측 DM/닉네임/프로필 -->
                 <div class="header-right">
-                    <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
+                    <RouterLink to="/chat">
+                        <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
+                    </RouterLink>
                     <span class="profile-nickname">{{ profile.nickname }}</span>
                         <img
                             :src="profile.image"
