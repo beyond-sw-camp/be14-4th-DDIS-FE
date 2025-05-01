@@ -72,7 +72,13 @@ const router = createRouter({
         {
             path: '/post/:id',
             component: () => import('@/pages/post/BackPostDetail.vue')
+        },
+        {
+            path: '/personal-page/:clientNum',
+            name: 'OtherUserPage',
+            component: () => import('@/pages/OtherUserPage.vue')
         }
+
     ]
 })
 
