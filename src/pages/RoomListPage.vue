@@ -29,7 +29,7 @@
   
   const rooms = ref([])
   const selectedRoom = ref(null)
-  const clientNum = 3
+  const clientNum = 9
   
   onMounted(async () => {
     try {
