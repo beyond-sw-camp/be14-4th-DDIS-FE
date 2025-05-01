@@ -28,7 +28,9 @@
       </div>
 
       <div class="right-content" :style="{ borderColor: todo.categoryColor }">
-        <span class="todo-content">{{ todo.content }}</span>
+        <span class="todo-content">
+  {{ todo.content || todo.todoContent || '(내용 없음)' }}
+</span>
         <div class="right-buttons">
           <div
             class="status-circle"

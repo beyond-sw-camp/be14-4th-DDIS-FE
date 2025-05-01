@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
 
     <div class="header-wrap"
         @mouseenter="hoverMega"
@@ -30,9 +31,9 @@
                     <RouterLink to="/chat">
                         <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
                     </RouterLink>
-                    <span class="profile-nickname">{{ profile.nickname }}</span>
+                    <span class="profile-nickname">{{ user.nickname }}</span>
                         <img
-                            :src="profile.image"
+                            :src="user.image"
                             alt="프로필"
                             class="profile-img"
                             @click.stop="toggleProfileModal"/>
@@ -43,110 +44,78 @@
                         class="profile-modal"
                         @click.stop>
                         <div class="profile-modal-header">
-                            <img :src="profile.image" alt="프로필" class="modal-profile-img" />
+                            <img :src="user.image" alt="프로필" class="modal-profile-img" />
                             <div class="modal-info">
-                                <div class="modal-nickname">{{ profile.nickname }}</div>
-                                <div class="modal-email">{{ profile.email }}</div>
+                                <div class="modal-nickname">{{ user.nickname }}</div>
+                                <div class="modal-email">{{ user.email }}</div>
                             </div>
                         </div>
-
                         <div class="profile-modal-menu">
-                            <div class="profile-modal-item">
-                                <img src="@/assets/icons/profile-setting.svg" alt="개인정보수정" class="modal-icon">
-                                <span>개인정보 수정</span>
-                            </div>
-                            <div class="profile-modal-item">
-                                <img src="@/assets/icons/profile-logout.svg" alt="로그아웃" class="modal-icon">
-                                <span>로그아웃</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 오버레이(모달 바깥 클릭 시 닫힘) -->
-                    <div v-if="showProfileModal" class="modal-overlay" @click="closeProfileModal"></div>
-                </div>
+              <RouterLink to="/modify-profile" class="profile-modal-item">
+                <img src="../../assets/icons/profile-setting.svg" alt="개인정보수정" class="modal-icon">
+                <span>개인정보 수정</span>
+              </RouterLink>
+              <div class="profile-modal-item" @click="logout">
+                <img src="../../assets/icons/profile-logout.svg" alt="로그아웃" class="modal-icon">
+                <span>로그아웃</span>
+              </div>
             </div>
+          </div>
 
-            <!-- 메가 메뉴 전체 영역 (hover 시 슬라이드다운) -->
-            <div v-if="activeMenu" class="mega-menu">
+          <!-- 오버레이 -->
+          <div v-if="showProfileModal" class="modal-overlay" @click="closeProfileModal"></div>
+        </div>
+      </div>
 
-                <div class="mega-menu-row">
-
-                    <!-- 설명 -->
-                    <div class="mega-desc">
-                        {{ (menus.find(m => m.key === activeMenu) || {}).desc }}
-                    </div>
-                    
-                    <!-- 중앙 서브메뉴: 활성 메뉴의 children만 한 줄 중앙정렬 -->
-                    <div class="mega-items-center">
-                        <RouterLink
-                            v-for="item in (menus.find(m => m.key === activeMenu)?.children || [])"
-                            :key="item.label"
-                            :to="item.href"
-                            class="mega-item"
-                        >
-                            {{ item.label }}
-                        </RouterLink>
-                    </div>
-                </div>
-            </div>
-        </header>
-    </div>
+      <!-- 메가 메뉴 -->
+      <div v-if="activeMenu" class="mega-menu">
+        <div class="mega-menu-row">
+          <div class="mega-desc">
+            {{ (menus.find(m => m.key === activeMenu) || {}).desc }}
+          </div>
+          <div class="mega-items-center">
+            <RouterLink
+              v-for="item in (menus.find(m => m.key === activeMenu)?.children || [])"
+              :key="item.label"
+              :to="item.href"
+              class="mega-item">
+              {{ item.label }}
+            </RouterLink>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
 </template>
+                   
+
 
 <script setup>
-    import { ref, onMounted, onBeforeUnmount } from 'vue'
+    
 
-    const profile = ref({
-        nickname: '',
-        email: '',
-        image: ''
-    })
 
-    onMounted(async () => {
-        const res = await fetch('http://localhost:3001/profiles/2')
+
+ 
+
+  import { ref, onMounted,onBeforeUnmount } from 'vue'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'  // useRouter를 import
+
+const authStore = useAuthStore()
+const { user } = storeToRefs(authStore)
+const showProfileModal = ref(false)
+const router = useRouter()  // router 정의
+
+onMounted(async () => {
+  authStore.loadTokens()
+  await authStore.fetchUserProfile()
+  const res = await fetch('http://localhost:3001/profiles/2')
         const data = await res.json()
         profile.value = data
-    })
+})
 
-    const showProfileModal = ref(false)
 
-    function toggleProfileModal() {
-        showProfileModal.value = !showProfileModal.value
-    }
-    function closeProfileModal() {
-        showProfileModal.value = false
-    }
-
-    function transformMenus(originalMenus) {
-        return originalMenus.map(menu => {
-            const newMenu = { ...menu }
-            if (Array.isArray(menu.children)) {
-            newMenu.children = menu.children.map(child => {
-                if (typeof child === 'string') {
-                return {
-                    label: child,
-                    href: generateHref(child),
-                }
-                }
-                return child
-            })
-            }
-            return newMenu
-        })
-    }
-
-        // 🛠 label을 href로 변환해주는 함수 (매핑 테이블 기반)
-    function generateHref(label) {
-        const mapping = {
-            '공지사항': '/notice',
-            '문의사항': '/inquiry',
-            '공동 Todo': '/todo/shared',
-            '개인 Todo': '/todo/personal',
-            '모집 게시판': '/post',
-        }
-        return mapping[label] || '/' + label.toLowerCase()
-    }
 
     const activeMenu = ref(null)
     const rawMenus = [
@@ -180,7 +149,65 @@
   function hoverMega() {
     // hover 영역 유지용
   }
-  </script>
+
+function toggleProfileModal() {
+  showProfileModal.value = !showProfileModal.value
+}
+
+function closeProfileModal() {
+  showProfileModal.value = false
+}
+
+function logout() {
+  authStore.logout()  // 로그아웃 처리
+  closeProfileModal()  // 프로필 모달 닫기
+  router.push('/logout')  // 로그아웃 후 로그아웃 페이지로 리디렉션
+}
+
+function transformMenus(originalMenus) {
+  return originalMenus.map(menu => {
+    const newMenu = { ...menu }
+    if (Array.isArray(menu.children)) {
+      newMenu.children = menu.children.map(child => {
+        if (typeof child === 'string') {
+          return {
+            label: child,
+            href: generateHref(child),
+          }
+        }
+        return child
+      })
+    }
+    return newMenu
+  })
+}
+
+function generateHref(label) {
+  const mapping = {
+    '공지사항': '/notice',
+    '문의사항': '/inquiry',
+    '모집 게시판': '/post',
+    '개인 Todo': '/todo/personal',
+    '공동 Todo': '/room',
+  }
+  return mapping[label] || '/' + label.toLowerCase()
+}
+
+
+
+function activate(key) {
+  activeMenu.value = key
+}
+
+function deactivate() {
+  activeMenu.value = null
+}
+
+function hoverMega() {
+  // hover 영역 유지용
+}
+</script>
+
   
   <style scoped>
     .main-header {
@@ -278,99 +305,65 @@
         cursor: pointer;
     }
 
-    .profile-modal {
-        position: absolute;
-        top: 60px;
-        right: 0;
-        min-width: 260px;
-        background: #fff;
-        border-radius: 18px;
-        box-shadow: 0 2px 15px 0 rgba(0,0,0,0.15);
-        padding: 24px 0 18px 0;
-        z-index: 999;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        animation: modalDown 0.18s;
-    }
 
-    @keyframes modalDown {
-        from { opacity: 0; transform: translateY(-12px);}
-        to   { opacity: 1; transform: translateY(0);}
-    }
+.profile-modal {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  min-width: 260px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 15px 0 rgba(0,0,0,0.15);
+  padding: 24px 0 18px 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  animation: modalDown 0.18s;
+}
 
-    .profile-modal-header {
-        display: flex;
-        align-items: center;
-        padding: 0 24px 10px 24px;
-        border-bottom: 1px solid #f0f0f0;
-        margin-bottom: 12px;
-    }
+@keyframes modalDown {
+  from { opacity: 0; transform: translateY(-12px);}
+  to   { opacity: 1; transform: translateY(0);}
+}
 
-    .modal-profile-img {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-right: 13px;
-        border: 1px solid #ddd;
-    }
+.profile-modal-header {
+  display: flex;
+  align-items: center;
+  padding: 0 24px 10px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 12px;
+}
 
-    .modal-info {
-        display: flex;
-        flex-direction: column;
-    }
+.modal-profile-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 13px;
+  border: 1px solid #ddd;
+}
 
-    .modal-nickname {
-        font-size: 17px;
-        font-weight: 700;
-        margin-bottom: 3px;
-        color: #222;
-    }
+.profile-modal-item:hover {
+    background: #ebebeb;
+}
+.modal-info {
+  display: flex;
+  flex-direction: column;
+}
 
-    .modal-email {
-        font-size: 14px;
-        color: #888;
-        font-weight: 500;
-    }
+.modal-nickname {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 3px;
+  color: #222;
+}
 
-    /* 메뉴 리스트 */
-    .profile-modal-menu {
-        display: flex;
-        flex-direction: column;
-        gap: 11px;
-        margin-top: 6px;
-        padding: 0 24px;
-    }
-
-    .profile-modal-item {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        font-size: 16px;
-        color: #111;
-        cursor: pointer;
-        padding: 7px 0 4px 0;
-        transition: background 0.15s, color 0.15s;
-        border-radius: 8px;
-    }
-
-    .profile-modal-item:hover {
-        background: #ebebeb;
-    }
-
-    .modal-icon {
-        font-size: 18px;
-    }
-
-    .modal-overlay {
-        /* 전체 화면 클릭시 닫힘 (투명) */
-        position: fixed;
-        left: 0; top: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 998;
-    }
+.modal-email {
+  font-size: 14px;
+  color: #888;
+  font-weight: 500;
+}
 
     /* 🟦 메가 메뉴 영역 전체 스타일 */
     .mega-menu {
@@ -385,52 +378,125 @@
         z-index: 99;
         box-shadow: 0 8px 18px rgba(0,0,0,0.07);
     }
+/* 메뉴 리스트 */
+.profile-modal-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-top: 6px;
+  padding: 0 24px;
+}
 
-    @keyframes megaDown {
-        from { opacity: 0; transform: translateY(-15px);}
-        to   { opacity: 1; transform: translateY(0);}
-    }
+.profile-modal-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 16px;
+  color: #111;
+  cursor: pointer;
+  padding: 7px 0 4px 0;
+  transition: background 0.15s, color 0.15s;
+  border-radius: 8px;
+}
 
-    .mega-menu-row {
-        display: flex;
-        flex-direction: row;
-        max-width: 1440px;
-        margin: 0 auto;
-        align-items: flex-start;
-    }
+.profile-modal-item:hover {
+  background: #f2f2f2;
+}
 
-    .mega-desc {
-        width: 300px;
-        color: #000000;
-        font-size: 15px;
-        font-weight: 500;
-        padding-left: 50px;
-        line-height: 1.6;
-        white-space: pre-line;
-    }
+.mega-desc {
+    width: 300px;
+    color: #000000;
+    font-size: 15px;
+    font-weight: 500;
+    padding-left: 50px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+.modal-icon {
+  font-size: 18px;
+}
 
-    .mega-items-center {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        margin-left: 80px;
-        justify-content: center;
-        min-height: 54px;
-    }
+.modal-overlay {
+  /* 전체 화면 클릭시 닫힘 (투명) */
+  position: fixed;
+  left: 0; top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 998;
+}
 
-    .mega-item {
-        font-size: 18px;
-        font-weight: bold;
-        padding: 4px 0;
-        color: #000000;
-        cursor: pointer;
-        transition: color 0.18s, font-weight 0.18s;
-        text-decoration: none;
-    }
-    
-    .mega-item:hover {
-        color: white;
-        font-weight: 600;
-    }
+.mega-item {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 4px 0;
+    color: #000000;
+    cursor: pointer;
+    transition: color 0.18s, font-weight 0.18s;
+    text-decoration: none;
+}
+
+.mega-item:hover {
+    color: white;
+    font-weight: 600;
+}
+
+    /* 🟦 메가 메뉴 영역 전체 스타일 */
+.mega-menu {
+  position: absolute;
+  left: 0;
+  top: 80px;
+  width: 100%;
+  background: #cdcdcd;
+  border-bottom: 1px solid #cdcdcd;
+  animation: megaDown 0.23s cubic-bezier(0.4,0.4,0.3,1.1);
+  padding: 24px 0 32px 0;
+  z-index: 99;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.07);
+}
+
+@keyframes megaDown {
+  from { opacity: 0; transform: translateY(-15px);}
+  to   { opacity: 1; transform: translateY(0);}
+}
+
+.mega-menu-row {
+  display: flex;
+  flex-direction: row;
+  max-width: 1440px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+.mega-desc {
+  width: 300px;
+  color: #000000;
+  font-size: 12px;
+  font-weight: 500;
+  padding-left: 50px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.mega-items-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 80px;
+  justify-content: center;
+  min-height: 54px;
+}
+
+.mega-item {
+  font-size: 16px;
+  padding: 4px 0;
+  color: #000000;
+  cursor: pointer;
+  transition: color 0.18s, font-weight 0.18s;
+  text-decoration: none;
+}
+
+.mega-item:hover {
+  color: #ffffff;
+  font-weight: 600;
+}
 </style>
-  

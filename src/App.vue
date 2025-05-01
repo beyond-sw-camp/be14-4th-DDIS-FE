@@ -28,6 +28,10 @@
 
 * {
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 html {
