@@ -25,7 +25,7 @@ const router = createRouter({
         },
     
         {
-            path: '/sharetodopage',
+            path: '/todo/shared',
             component: () => import('@/pages/ShareRoomPage.vue')
         },
         {
@@ -76,7 +76,13 @@ const router = createRouter({
             path: '/mypage',
             component: () => import('@/pages/Mypage.vue'),
             meta: { requiresAuth: true } // 인증 필요 시
-        }
+        },
+
+        {
+            path: '/inquiryAdmin/0',
+            component: () => import('@/components/inquiry/InquiryDetailPageAdmin.vue')
+        },
+    
     ]
 })
 

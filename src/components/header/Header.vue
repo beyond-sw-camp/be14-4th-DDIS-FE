@@ -141,10 +141,9 @@
         const mapping = {
             '공지사항': '/notice',
             '문의사항': '/inquiry',
-            '채팅방': '/chat',
-            // '모집 게시판': '/board',
-            // '개인 Todo': '/todo/personal',
-            // '공동 Todo': '/todo/shared',
+            '공동 Todo': '/todo/shared',
+            '개인 Todo': '/todo/personal',
+            '모집 게시판': '/post',
         }
         return mapping[label] || '/' + label.toLowerCase()
     }
@@ -167,7 +166,7 @@
         key: 'service',
         label: '서비스',
         desc: '중요한 소식과 안내를 놓치지 마세요.\n최신 공지와 문의사항을 한눈에 확인할 수 있습니다.',
-        children: ['공지사항', '문의사항','채팅방'],
+        children: ['공지사항', '문의사항'],
     },
   ]
   const menus = transformMenus(rawMenus)
@@ -190,7 +189,7 @@
         width: 100vw;
         min-width: 1024px;
         background: #ffffff;
-        border-bottom: 1px solid #cdcdcd;
+        border-bottom: 1px solid #ccc;
         z-index: 100;
         transition: background 0.22s;
         display: flex;
@@ -199,6 +198,7 @@
     }
     .main-header.open {
         background: #cdcdcd;
+        border: none;
     }
     .inner-header {
         width: 100%;
@@ -241,7 +241,7 @@
     }
     .menu-item span {
         display: inline-block;
-        font-size: 16px;
+        font-size: 20px;
         font-weight: 700;
         color: #000000;
         padding: 10px 0;
@@ -249,19 +249,19 @@
         transition: color 0.18s;
     }
     .menu-item span.hovered {
-        color: #ffffff;
+        color: white;
     }
     .header-right {
         position: relative;
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 20px;
         min-width: 170px;
         justify-content: flex-end;
     }
     .header-icon.dm {
-        width: 28px;
-        height: 28px;
+        width: 30px;
+        height: 30px;
     }
     .profile-nickname {
         font-size: 15px;
@@ -356,7 +356,7 @@
     }
 
     .profile-modal-item:hover {
-        background: #f2f2f2;
+        background: #ebebeb;
     }
 
     .modal-icon {
@@ -379,7 +379,7 @@
         top: 80px;
         width: 100%;
         background: #cdcdcd;
-        border-bottom: 1px solid #cdcdcd;
+        border-bottom: 1px solid #ccc;
         animation: megaDown 0.23s cubic-bezier(0.4,0.4,0.3,1.1);
         padding: 24px 0 32px 0;
         z-index: 99;
@@ -402,7 +402,7 @@
     .mega-desc {
         width: 300px;
         color: #000000;
-        font-size: 12px;
+        font-size: 15px;
         font-weight: 500;
         padding-left: 50px;
         line-height: 1.6;
@@ -419,7 +419,8 @@
     }
 
     .mega-item {
-        font-size: 16px;
+        font-size: 18px;
+        font-weight: bold;
         padding: 4px 0;
         color: #000000;
         cursor: pointer;
@@ -428,7 +429,7 @@
     }
     
     .mega-item:hover {
-        color: #ffffff;
+        color: white;
         font-weight: 600;
     }
 </style>
