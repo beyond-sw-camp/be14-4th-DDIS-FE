@@ -130,6 +130,7 @@ onMounted(async () => {
       items.value = []
     }
   })
+  
 
 const filteredItems = computed(() => {
   let list = [...items.value]
@@ -179,22 +180,23 @@ const handlePostSubmit = async (formData) => {
     console.log('Submitting form data:', formData);
 
     const requestData = {
-      categoryName: formData.category,
+      categoryNum: formData.category.categoryNum,
       postTitle: formData.title,
       postContent: formData.content,
       recruitmentStartDate: formData.recruitStartDate,
       recruitmentEndDate: formData.recruitEndDate,
       startDate: formData.participateStartDate,
+      activitytime: 7,
       endDate: formData.participateEndDate,
-      limit: formData.maxParticipants,
-      isPrivate: formData.visibility === 'private',
-      password: formData.password || null,
-      writerNum: 1
+      recruitmentLimit: formData.maxParticipants,
+      isPublic: formData.visibility === 'private',
+      postPassword: formData.password || null,
+      clientNum: 1
     }
 
     console.log('Sending request data:', requestData);
 
-    const res = await fetch('http://localhost:8080/post', {
+    const res = await fetch('http://localhost:8080/post/createPost', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -202,7 +204,7 @@ const handlePostSubmit = async (formData) => {
       body: JSON.stringify(requestData)
     })
 
-    const responseData = await res.json()
+    const responseData = await res.text()
     
     if (!res.ok) {
       throw new Error(responseData.message || '게시글 등록 실패');
@@ -211,7 +213,7 @@ const handlePostSubmit = async (formData) => {
     console.log('Response data:', responseData);
     
     // 기존 목록에 새 게시글 추가
-    items.value = [{
+    items.value.unshift({
       id: responseData.post_num,
       category: responseData.category_name,
       title: responseData.post_title,
@@ -219,9 +221,9 @@ const handlePostSubmit = async (formData) => {
       startDate: responseData.recruitment_start_date,
       endDate: responseData.recruitment_end_date,
       status: '모집중'
-    }, ...items.value]
+    })
 
-    showModal.value = false
+    // showModal.value = false
     alert('게시글이 등록되었습니다.')
   } catch (e) {
     console.error('❌ 게시글 등록 실패:', e)

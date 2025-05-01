@@ -2,7 +2,6 @@
     <div class="detail-section" :class="{ 'show-detail': modelValue }">
       <h3>모집게시글 상세 설정</h3>
   
-      <!-- 공개여부 + 비밀번호 한 줄 -->
       <div class="form-group row">
         <label>공개여부</label>
         <div class="visibility-group">
@@ -15,7 +14,6 @@
             비공개
           </label>
   
-          <!-- 비밀번호 입력칸: 비공개 선택 시만 보임 -->
           <input
             v-if="formData.visibility === 'private'"
             type="password"
@@ -26,7 +24,6 @@
         </div>
       </div>
   
-      <!-- 모집기간 / 참여기간 한 줄 -->
       <div class="input-row">
         <div class="form-group">
           <label>모집기간</label>
@@ -73,13 +70,11 @@
         </div>
       </div>
   
-      <!-- 모집인원: 아래 단독 -->
       <div class="form-group full">
         <label>모집인원</label>
         <input type="number" v-model="formData.maxParticipants" min="1" />
       </div>
   
-      <!-- 하단 버튼 -->
       <div class="button-group">
         <button class="cancel-btn" @click="closeDetail">취소</button>
         <button class="submit-btn" @click="submitDetail">확인</button>
@@ -87,21 +82,18 @@
     </div>
   </template>
   
-  <script setup lang="ts">
-  import { ref, defineProps, defineEmits, computed } from 'vue'
+  <script setup>
+  import { computed } from 'vue'
   
-  const props = defineProps<{ modelValue: boolean }>()
-  const emit = defineEmits(['update:modelValue', 'submit'])
-  
-  const formData = ref({
-    visibility: 'public',
-    password: '',
-    recruitStartDate: '',
-    recruitEndDate: '',
-    participateStartDate: '',
-    participateEndDate: '',
-    maxParticipants: 1
+  const props = defineProps({
+    formData: {
+      type: Object,
+      required: true
+    },
+    modelValue: Boolean
   })
+  
+  const emit = defineEmits(['update:modelValue', 'submit'])
   
   const today = computed(() => {
     const date = new Date()
@@ -109,71 +101,79 @@
   })
   
   const maxRecruitEndDate = computed(() => {
-    if (!formData.value.recruitStartDate) return ''
-    const date = new Date(formData.value.recruitStartDate)
+    if (!props.formData.recruitStartDate) return ''
+    const date = new Date(props.formData.recruitStartDate)
     date.setDate(date.getDate() + 30)
     return date.toISOString().split('T')[0]
   })
   
   const maxParticipateEndDate = computed(() => {
-    if (!formData.value.participateStartDate) return ''
-    const date = new Date(formData.value.participateStartDate)
+    if (!props.formData.participateStartDate) return ''
+    const date = new Date(props.formData.participateStartDate)
     date.setDate(date.getDate() + 90)
     return date.toISOString().split('T')[0]
   })
   
   const validateRecruitDates = () => {
-    if (!formData.value.recruitStartDate || !formData.value.recruitEndDate) return
-    
-    const start = new Date(formData.value.recruitStartDate)
-    const end = new Date(formData.value.recruitEndDate)
-    const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
-    
+    const { recruitStartDate, recruitEndDate } = props.formData
+    if (!recruitStartDate || !recruitEndDate) return
+  
+    const start = new Date(recruitStartDate)
+    const end = new Date(recruitEndDate)
+    const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24))
+  
     if (diffDays > 30) {
       alert('모집기간은 최대 30일까지 설정 가능합니다.')
-      formData.value.recruitEndDate = maxRecruitEndDate.value
+      props.formData.recruitEndDate = maxRecruitEndDate.value
     }
   }
   
   const validateParticipateDates = () => {
-    if (!formData.value.participateStartDate || !formData.value.participateEndDate) return
-    
-    const start = new Date(formData.value.participateStartDate)
-    const end = new Date(formData.value.participateEndDate)
-    const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
-    
+    const { participateStartDate, participateEndDate } = props.formData
+    if (!participateStartDate || !participateEndDate) return
+  
+    const start = new Date(participateStartDate)
+    const end = new Date(participateEndDate)
+    const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24))
+  
     if (diffDays > 90) {
       alert('참여기간은 최대 90일까지 설정 가능합니다.')
-      formData.value.participateEndDate = maxParticipateEndDate.value
+      props.formData.participateEndDate = maxParticipateEndDate.value
     }
   }
   
-  const closeDetail = () => emit('update:modelValue', false)
+  const closeDetail = () => {
+    emit('update:modelValue', false)
+  }
   
   const submitDetail = () => {
-    if (!formData.value.recruitStartDate || !formData.value.recruitEndDate) {
+    const f = props.formData
+  
+    if (!f.recruitStartDate || !f.recruitEndDate) {
       alert('모집기간을 설정해주세요.')
       return
     }
   
-    if (!formData.value.participateStartDate || !formData.value.participateEndDate) {
+    if (!f.participateStartDate || !f.participateEndDate) {
       alert('참여기간을 설정해주세요.')
       return
     }
   
-    if (formData.value.visibility === 'private' && !formData.value.password) {
+    if (f.visibility === 'private' && !f.password) {
       alert('비밀번호를 입력해주세요.')
       return
     }
   
     emit('submit', {
-      ...formData.value,
-      startDate: new Date(formData.value.recruitStartDate),
-      endDate: new Date(formData.value.recruitEndDate)
+      ...f,
+      startDate: new Date(f.recruitStartDate),
+      endDate: new Date(f.recruitEndDate),
+      postPassword: props.formData.password
     })
     closeDetail()
   }
   </script>
+  
   
   <style scoped>
   .detail-section {

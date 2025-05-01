@@ -14,7 +14,7 @@
             <select v-model="formData.category">
               <option value="">카테고리 선택</option>
               <option v-for="category in categories" :key="category" :value="category">
-                {{ category }}
+                {{ category.categoryName }}
               </option>
             </select>
           </div>
@@ -60,6 +60,7 @@
         <transition name="fade">
           <PostDetailSettings
             v-if="showDetail"
+            :formData="formData"
             v-model="showDetail"
             @submit="handleDetailSubmit"
           />
@@ -76,15 +77,14 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 import PostDetailSettings from '@/components/post/PostDetailSetting.vue'
 
-
-const props = defineProps<{
-  modelValue: boolean
-  categories: string[]
-}>()
+const props = defineProps({
+  modelValue: Boolean,
+  categories: Array
+})
 
 const emit = defineEmits(['update:modelValue', 'submit'])
 
@@ -106,7 +106,7 @@ const closeModal = () => {
   }
 }
 
-const handleDetailSubmit = (detailData: any) => {
+const handleDetailSubmit = (detailData) => {
   if (!formData.value.category || !formData.value.title || !formData.value.content) {
     alert('모든 필드를 입력해주세요.')
     return
