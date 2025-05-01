@@ -68,6 +68,7 @@ function handleDeleteTodo(payload) {
 
 <style scoped>
 .todo-list-wrapper {
+  margin-bottom: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,7 +92,7 @@ function handleDeleteTodo(payload) {
 .category-header {
   font-size: 17px;
   font-weight: 800;
-  margin: 0 16px 16px;
+  margin: 5px 0px 13px;
   user-select: none;
 }
 

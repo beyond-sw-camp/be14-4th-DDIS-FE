@@ -154,8 +154,10 @@ function formatDate(dateStr) {
   border-radius: 8px;
   cursor: pointer;
   z-index: 2;
+  user-select: none;
 }
 .pinned-item {
+  margin-bottom: 3px;
   display: flex;
   align-items: center;
   background: #fff;
@@ -164,10 +166,11 @@ function formatDate(dateStr) {
   overflow: hidden;
 }
 .content-area {
+  font-size: 14px;
   flex: 1;
   display: flex;
   align-items: center;
-  padding: 8px 12px;
+  padding: 4px 5px;
   gap: 12px;
   user-select: none;
 }
@@ -185,6 +188,8 @@ function formatDate(dateStr) {
 }
 .middle-content {
   flex: 1;
+  padding: 4px 5px;
+
   color: #333;
   transition: transform 0.2s ease;
 }
