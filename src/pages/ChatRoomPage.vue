@@ -33,9 +33,9 @@
       <div class="chat-header">
         <div class="chat-name">{{ selectedChat?.name || '대화를 선택하세요' }}</div>
         <br />
-        <div class="chat-status">최근 접속: {{ selectedChat?.lastSeen || '-' }}</div>
+        <!-- <div class="chat-status">최근 접속: {{ selectedChat?.lastSeen || '-' }}</div> -->
       </div>
-      <div class="chat-messages">
+      <div class="chat-messages" ref="messageContainer">
         <div
           v-for="msg in messages"
           :key="msg.sendTime + msg.sender"
@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
 import axios from 'axios'
@@ -68,6 +68,7 @@ const messages = ref([])
 const clientId = Number(localStorage.getItem('clientId') || 12)
 let stompClient = null
 let currentSubscription = null
+const messageContainer = ref(null)
 
 const activeTab = ref('공용')
 
@@ -99,6 +100,14 @@ const filteredChats = computed(() =>
     .filter(chat => activeTab.value === '공용' ? chat.type === '공용' : chat.type === '개인')
 )
 
+function scrollToBottom() {
+  nextTick(() => {
+    if (messageContainer.value) {
+      messageContainer.value.scrollTop = messageContainer.value.scrollHeight
+    }
+  })
+}
+
 watch(selectedChat, async (chat) => {
   if (!chat || !stompClient?.connected) return
 
@@ -123,6 +132,7 @@ watch(selectedChat, async (chat) => {
     // isMe: Number(msg.sender) === Number(clientId)
     isMe: Number((msg.sender ?? msg.clientNum)) === clientId
   }))
+  scrollToBottom()
 
   // ✅ clientId로 고정된 subscription ID 사용
   const subscriptionId = `chatroom-${clientId}`
@@ -140,6 +150,7 @@ watch(selectedChat, async (chat) => {
         // isMe: Number(msg.sender) === Number(clientId)
         isMe: Number((msg.sender ?? msg.clientNum)) === clientId
       })
+      scrollToBottom()
     },
     { id: subscriptionId } // 👈 ID 고정!
   )
@@ -205,7 +216,7 @@ function sendMessage() {
   }
 
   .toggle-btn.active {
-    background: #84d4c2;
+    background: #5cddbf;
     color: white;
     border-radius: 12px 0 0 12px;
   }
@@ -251,15 +262,11 @@ function sendMessage() {
   .chat-name {
     font-weight: bold;
     font-size: 16px;
-    margin-top: 10px;
+    margin-top: 15px;
     margin-left: 50px;
+    padding-top: 10px;
   }
-  .chat-status {
-    font-size: 12px;
-    color: #999;
-    margin-left: 50px;
-    margin-bottom: 10px;
-  }
+
   .chat-messages {
     flex: 1;
     padding: 16px;
@@ -275,10 +282,13 @@ function sendMessage() {
     border-radius: 25px;
     max-width: 60%;
     position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* ✅ 입체감 주는 그림자 */
+    transform: translateY(-1px); /* ✅ 약간 떠 있는 듯한 효과 */
+    transition: transform 0.2s, box-shadow 0.2s;
   }
   .message.me {
     align-self: flex-end;
-    background: #7bff67d5;
+    background: #20f10085;
     border-radius: 25px;
     padding: 10px 18px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* ✅ 입체감 주는 그림자 */
@@ -305,14 +315,13 @@ function sendMessage() {
     border: 1px solid #ccc;
   }
   .chat-input button {
-    background: #50d4c6;
+    background: none;
     border: none;
-    color: white;
-    padding: 10px 14px;
+    color: skyblue;
+    padding: 5px 14px;
     margin-left: 10px;
-    border-radius: 50%;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 22px;
   }
 </style>
   

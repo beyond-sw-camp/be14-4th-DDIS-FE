@@ -25,7 +25,9 @@
 
                 <!-- 우측 DM/닉네임/프로필 -->
                 <div class="header-right">
-                    <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
+                    <RouterLink to="/chat">
+                        <img src="@/assets/icons/dm-icon.svg" alt="DM" class="header-icon dm" />
+                    </RouterLink>
                     <span class="profile-nickname">{{ profile.nickname }}</span>
                         <img
                             :src="profile.image"
@@ -137,7 +139,6 @@
         const mapping = {
             '공지사항': '/notice',
             '문의사항': '/inquiry',
-            '채팅방': '/chat',
             // '모집 게시판': '/board',
             // '개인 Todo': '/todo/personal',
             // '공동 Todo': '/todo/shared',
@@ -163,7 +164,7 @@
         key: 'service',
         label: '서비스',
         desc: '중요한 소식과 안내를 놓치지 마세요.\n최신 공지와 문의사항을 한눈에 확인할 수 있습니다.',
-        children: ['공지사항', '문의사항','채팅방'],
+        children: ['공지사항', '문의사항'],
     },
     ]
     const menus = transformMenus(rawMenus)
