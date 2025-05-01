@@ -15,9 +15,9 @@
         v-model:focusedDate="focusedDate"
       />
 
-      <!-- 👇 달력 아래에 완료 로그 타임라인 추가 -->
       <DoneTimeLine
         v-if="selectedDate"
+        :key="timelineKey"
         :roomNum="room.roomNum"
         :selectedDate="selectedDate"
       />
@@ -25,6 +25,7 @@
 
     <div class="right-sidebar">
       <RoomRightSideBar
+      v-if="memberNum"
         :todoList="todoList"
         :approveList="approveList"
         :memberNum="memberNum"
@@ -32,6 +33,7 @@
         @open-approve-modal="openModal"
         @approve-success="removeApprove"
         @approve-reject="removeApprove"
+        @refresh-done-log="refreshDoneLog"
         @open-share-todo-modal="isShareTodoModalOpen = true"
       />
     </div>
@@ -81,6 +83,8 @@ const approveList = ref([])
 const approveTodoList = ref([])
 const selectedDate = ref('')
 const memberNum = ref('')
+const timelineKey = ref(0)
+
 
 const focusedDate = ref(new Date())
 const currentYear = computed(() => dayjs(focusedDate.value).year())
@@ -88,11 +92,13 @@ const currentMonth = computed(() => dayjs(focusedDate.value).month() + 1)
 
 onMounted(async () => {
   try {
+    // ✅ memberNum을 먼저 안전하게 fetch 후 사용
     const res1 = await fetch(`http://localhost:8080/members/find?roomNum=${props.room.roomNum}&clientNum=${props.clientNum}`)
     const data1 = await res1.json()
     memberNum.value = data1.memberNum
+    console.log('✅ 가져온 memberNum:', memberNum.value) // ← 여기 추가
 
-    const res = await fetch(`http://localhost:8080/room/${props.room.roomNum}/data`)
+    const res = await fetch(`http://localhost:8080/room/${props.room.roomNum}/data?memberNum=${memberNum.value}`)
     if (!res.ok) throw new Error('방 초기 데이터 불러오기 실패')
 
     const data = await res.json()
@@ -103,6 +109,9 @@ onMounted(async () => {
   }
 })
 
+function refreshDoneLog() {
+  timelineKey.value++
+}
 async function handleRefresh() {
   try {
     const res = await fetch(`http://localhost:8080/calendar/room/${props.room.roomNum}/todos?clientNum=${props.clientNum}&date=${selectedDate.value}`)
@@ -148,6 +157,7 @@ function removeApprove(id) {
 }
 
 function updateTodoApprove({ todoList: newTodos, approveList: newApproves, selectedDate: date }) {
+  console.log('✅ 받은 selectedDate:', date)
   todoList.value = newTodos
   approveList.value = newApproves
   approveTodoList.value = newTodos

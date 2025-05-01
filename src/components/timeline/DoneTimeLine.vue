@@ -16,8 +16,10 @@
     </div>
   </template>
   
+  
   <script setup>
   import { ref, watch } from 'vue'
+  import dayjs from 'dayjs'
   
   const props = defineProps({
     selectedDate: String,
@@ -25,11 +27,15 @@
   })
   
   const doneLogs = ref([])
+  console.log('✅ 선택한 날짜:', props.selectedDate)
   
   watch(
     () => props.selectedDate,
     async (newDate) => {
       if (!newDate) return
+
+      console.log('✅ done-log 요청 날짜:', newDate)
+      const formattedDate = dayjs(newDate).format('YYYY-MM-DD')
       try {
         const res = await fetch(
           `http://localhost:8080/calendar/room/${props.roomNum}/done-logs?date=${newDate}`

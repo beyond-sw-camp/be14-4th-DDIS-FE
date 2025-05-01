@@ -60,10 +60,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import draggable from 'vuedraggable'
 import ShareTodoModal from '@/components/modal/ShareTodoModal.vue'
 
+// ✅ Props 및 Emit 정의
 const props = defineProps({
   todoList: Array,
   approveList: Array,
@@ -78,22 +79,26 @@ const emit = defineEmits([
   'open-share-todo-modal'
 ])
 
+// ✅ 공유 TODO 중복 제거
 const uniqueTodoList = computed(() => {
   return Array.from(
     new Map(props.todoList.map(todo => [todo.shareTodoNum, todo])).values()
   )
 })
 
+// ✅ Approve Modal
 function openModal() {
   emit('open-approve-modal')
 }
 
+// ✅ ShareTodo Modal
 const isShareTodoModalOpen = ref(false)
 const openShareTodoModal = () => {
   emit('open-share-todo-modal')
 }
-
+// ✅ 승인 처리
 async function approveItem(id) {
+  console.log("값 출력", id,props.memberNum)
   try {
     await fetch('http://localhost:8080/approve/status', {
       method: 'PATCH',
@@ -110,23 +115,31 @@ async function approveItem(id) {
   }
 }
 
-async function rejectItem(id) {
+// ✅ 거절 처리
+function rejectItem(id) {
   emit('approve-reject', id)
 }
 
 // ✅ 승인 수 설정 기능
 const approveCount = ref(0)
 
-onMounted(async () => {
-  try {
-    const res = await fetch(`http://localhost:8080/room/${props.roomNum}/data`)
-    const data = await res.json()
-    approveCount.value = data.approveRequiredCount
-  } catch (err) {
-    console.error('초기 승인 수 불러오기 실패:', err)
-  }
-})
+// ✅ memberNum 감시해서 승인 수 받아오기
+watch(
+  () => props.memberNum,
+  async (newVal) => {
+    if (!newVal) return
+    try {
+      const res = await fetch(`http://localhost:8080/room/${props.roomNum}/data?memberNum=${newVal}`)
+      const data = await res.json()
+      approveCount.value = data.approveRequiredCount
+    } catch (err) {
+      console.error('초기 승인 수 불러오기 실패:', err)
+    }
+  },
+  { immediate: true }
+)
 
+// ✅ 승인 수 서버 반영
 const updateApproveCount = async () => {
   try {
     await fetch(`http://localhost:8080/rooms/${props.roomNum}/approve-count`, {
