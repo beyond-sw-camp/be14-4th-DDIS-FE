@@ -111,10 +111,12 @@ const isPostModalOpen = ref(false)
 const modalReportType = ref('')
 const modalReportTypeNum = ref(0)
 const todoData = ref(null)
-const currentUserId = 1
 const searchKeyword = ref('')
 const sortOption = ref('latest')
 const categories = ref([]) // 필요에 따라 카테고리 추가
+const token = localStorage.getItem('accessToken');
+const payload = JSON.parse(atob(token.split('.')[1]));
+const clientId = payload.clientNum
 
 onMounted(async () => {
   try {
@@ -130,7 +132,7 @@ onMounted(async () => {
     data.recruitEndDate = data.recruitEndDate ? new Date(data.recruitEndDate).toISOString() : null
 
      // ✅ 테스트용 작성자 ID 강제 주입
-     data.authorId = 1 // 👈 여기만 추가하면 끝!
+    //  data.authorId = 1 // 👈 여기만 추가하면 끝!
 
     todoData.value = data
   } catch (e) {
@@ -140,7 +142,7 @@ onMounted(async () => {
   }
 })
 
-const isAuthor = computed(() => todoData.value?.authorId === currentUserId)
+const isAuthor = computed(() => todoData.value?.authorId === clientId)
 
 const formatDate = (date) => {
   if (!date) return '날짜 없음'
@@ -212,7 +214,7 @@ const handleDelete = async () => {
 const handleApply = async () => {
   try {
     const postNum = route.params.id
-    const res = await fetch(`http://localhost:8080/applicants/${postNum}?clientNum=${currentUserId}`, {
+    const res = await fetch(`http://localhost:8080/applicants/${postNum}?clientNum=${clientId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     })
@@ -233,7 +235,7 @@ const handleCreateRoom = async () => {
     const res = await fetch('http://localhost:8080/room', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ postNum, clientNum: currentUserId })
+      body: JSON.stringify({ postNum, clientNum: clientId })
     })
     if (!res.ok) throw new Error('공동방 생성 실패')
     const data = await res.json()
@@ -265,7 +267,7 @@ const handlePostSubmit = async (formData) => {
       recruitmentLimit: formData.maxParticipants,
       isPublic: formData.visibility === 'private',
       postPassword: formData.password || null,
-      clientNum: 1
+      clientNum: clientId
     }
     const res = await fetch('http://localhost:8080/post/createPost', {
       method: 'POST',

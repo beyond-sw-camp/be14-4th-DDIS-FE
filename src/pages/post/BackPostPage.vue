@@ -87,6 +87,9 @@ const categories = ref([])
 const selectedCategory = ref('전체')
 const searchKeyword = ref('')
 const sortOption = ref('latest')
+const token = localStorage.getItem('accessToken');
+const payload = JSON.parse(atob(token.split('.')[1]));
+const clientId = payload.clientNum
 
 onMounted(async () => {
   try {
@@ -186,12 +189,11 @@ const handlePostSubmit = async (formData) => {
       recruitmentStartDate: formData.recruitStartDate,
       recruitmentEndDate: formData.recruitEndDate,
       startDate: formData.participateStartDate,
-      activitytime: 7,
       endDate: formData.participateEndDate,
       recruitmentLimit: formData.maxParticipants,
-      isPublic: formData.visibility === 'private',
+      isPublic: formData.visibility === 'public',
       postPassword: formData.password || null,
-      clientNum: 1
+      clientNum: clientId
     }
 
     console.log('Sending request data:', requestData);
@@ -204,7 +206,7 @@ const handlePostSubmit = async (formData) => {
       body: JSON.stringify(requestData)
     })
 
-    const responseData = await res.text()
+    const responseData = await res.json()
     
     if (!res.ok) {
       throw new Error(responseData.message || '게시글 등록 실패');

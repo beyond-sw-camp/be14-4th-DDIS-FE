@@ -1,3 +1,5 @@
+<!-- PostModal.vue -->
+
 <template>
   <div v-if="modelValue" class="modal-overlay" @click="closeModal">
     <div class="modal-content" @click.stop>
